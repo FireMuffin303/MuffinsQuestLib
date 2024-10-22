@@ -1,0 +1,10 @@
+{
+  "item.muffins_questlib.quest_paper": "Quest Paper",
+  "muffins_questlib.questdata.kill_entity.tooltip": "Kill %d %s",
+  "quest_info_screen.cancel_quest": "Cancel Quest",
+  "quest_info_screen.no_quest": "You don't have any quest. :(",
+  "quest_info_screen.progress": "%s (%d/%d)",
+  "quest_info_screen.quest_name": "Quest : %s",
+  "quest_info_screen.quest_reward": "Rewards",
+  "quest_info_screen.title": "Quest"
+}

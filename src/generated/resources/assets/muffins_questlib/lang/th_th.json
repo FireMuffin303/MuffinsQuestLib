@@ -1,0 +1,10 @@
+{
+  "item.muffins_questlib.quest_paper": "กระดาษภารกิจ",
+  "muffins_questlib.questdata.kill_entity.tooltip": "ฆ่า %d %s",
+  "quest_info_screen.cancel_quest": "ยกเลิกภารกิจ",
+  "quest_info_screen.no_quest": "คุณไม่มีภารกิจอะไรเลย :(",
+  "quest_info_screen.progress": "%s (%d/%d)",
+  "quest_info_screen.quest_name": "ภารกิจ : %s",
+  "quest_info_screen.quest_reward": "รางวัล",
+  "quest_info_screen.title": "ภารกิจ"
+}
