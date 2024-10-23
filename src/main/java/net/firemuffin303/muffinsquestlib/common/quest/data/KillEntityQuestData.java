@@ -2,10 +2,13 @@ package net.firemuffin303.muffinsquestlib.common.quest.data;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.firemuffin303.muffinsquestlib.common.quest.QuestType;
+import net.firemuffin303.muffinsquestlib.common.registry.ModQuestTypes;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -36,6 +39,11 @@ public record KillEntityQuestData(EntityRequirementEntry entityRequirementEntry)
         ),x,y, 16755200,false);
     }
 
+    @Override
+    public QuestType<?> getType() {
+        return ModQuestTypes.KILL_ENTITY_DATA;
+    }
+
 
     //Quest Data
     @Override
@@ -52,6 +60,11 @@ public record KillEntityQuestData(EntityRequirementEntry entityRequirementEntry)
     @Override
     public boolean checkKillOther(ServerPlayerEntity serverPlayerEntity, ServerWorld world, LivingEntity target) {
         return this.entityRequirementEntry.entityType.equals(target.getType());
+    }
+
+    @Override
+    public boolean checkItem(ServerPlayerEntity serverPlayerEntity, ItemStack itemStack) {
+        return false;
     }
 
     public static KillEntityQuestData fromPacket(PacketByteBuf packetByteBuf) {

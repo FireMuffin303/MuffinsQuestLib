@@ -33,12 +33,16 @@ public class QuestTooltipComponent implements TooltipComponent {
 
     @Override
     public int getHeight() {
-        return 50;
+        int height = 32;
+        for(QuestType<?> questType: questInstance.getQuest().questTypes.keySet().stream().toList()) {
+            height += this.questInstance.getQuestData(questType).size() * 12;
+        }
+        return height;
     }
 
     @Override
     public int getWidth(TextRenderer textRenderer) {
-        return 100;
+        return 120;
     }
 
     @Override

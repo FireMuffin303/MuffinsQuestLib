@@ -4,6 +4,7 @@
   "package": "net.firemuffin303.muffinsquestlib.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "InventoryChangedCriterionMixin",
     "PlayerEntityMixin"
   ],
   "client": [

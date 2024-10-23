@@ -2,11 +2,13 @@ package net.firemuffin303.muffinsquestlib.common.registry;
 
 import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
 import net.firemuffin303.muffinsquestlib.common.quest.Quest;
+import net.firemuffin303.muffinsquestlib.common.quest.data.CollectItemQuestData;
 import net.firemuffin303.muffinsquestlib.common.quest.data.KillEntityQuestData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.text.Text;
 
 import java.util.List;
@@ -38,6 +40,26 @@ public class ModQuests {
                     .addQuest(ModQuestTypes.KILL_ENTITY_DATA,new KillEntityQuestData(new KillEntityQuestData.EntityRequirementEntry(EntityType.ZOMBIE,1)))
                     .addQuest(ModQuestTypes.KILL_ENTITY_DATA,new KillEntityQuestData(new KillEntityQuestData.EntityRequirementEntry(EntityType.SKELETON,1)))
                     .addQuest(ModQuestTypes.KILL_ENTITY_DATA,new KillEntityQuestData(new KillEntityQuestData.EntityRequirementEntry(EntityType.ENDERMAN,1)))
+    );
+
+    public static final Quest COLLECT_PLANKS_5 = register("collect_planks_5",new Quest(
+            new Quest.Definition(
+                    List.of(new ItemStack(Items.OAK_PLANKS,20)),
+                    5),
+                    "Collect 5 Oak & Birch Planks"
+            )
+            .addQuest(ModQuestTypes.COLLECT_ITEM_DATA,new CollectItemQuestData(new ItemStack(Items.OAK_PLANKS,5)))
+            .addQuest(ModQuestTypes.COLLECT_ITEM_DATA,new CollectItemQuestData(new ItemStack(Items.BIRCH_PLANKS,5)))
+    );
+
+    public static final Quest BLAZE_KILLER_1 = register("blaze_killer_1",new Quest(
+            new Quest.Definition(
+                    List.of(new ItemStack(Items.BLAZE_POWDER,5)),
+                    15),
+                    "Kill 5 Blazes and Collect 3 Blaze Rods"
+            )
+            .addQuest(ModQuestTypes.KILL_ENTITY_DATA,new KillEntityQuestData(new KillEntityQuestData.EntityRequirementEntry(EntityType.BLAZE,5)))
+            .addQuest(ModQuestTypes.COLLECT_ITEM_DATA,new CollectItemQuestData(new ItemStack(Items.BLAZE_ROD,3)))
     );
 
     public static void init(){}

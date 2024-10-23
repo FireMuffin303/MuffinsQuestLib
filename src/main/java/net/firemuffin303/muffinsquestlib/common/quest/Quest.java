@@ -21,17 +21,21 @@ public class Quest {
     public Definition definition;
     public String description;
 
-    /*
-
     public static final Codec<Quest> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-
-            QuestData.
+            Codec.unboundedMap(ModRegistries.QUEST_TYPE_REGISTRY.getCodec(),
+                    ((Codec<QuestData>)ModRegistries.QUEST_TYPE_REGISTRY.getCodec().dispatch(QuestData::getType,QuestType::getCodec))
+                            .listOf()
+            ).fieldOf("quest_type").forGetter(quest -> quest.questTypes) ,
             Codec.STRING.fieldOf("rarity").forGetter(quest -> quest.questRarity.name()),
             Definition.CODEC.fieldOf("definition").forGetter(quest -> quest.definition),
             Codec.STRING.fieldOf("description").forGetter(quest -> quest.description)
     ).apply(instance,Quest::new));
 
-     */
+    public Quest(Map<QuestType<?>,List<QuestData>> questTypes,String rarity,Definition definition,String description){
+        this(definition,description);
+        this.setQuestTypes(questTypes);
+        this.setRarity(QuestRarity.valueOf(rarity));
+    }
 
 
     public Quest(Definition definition,String description){

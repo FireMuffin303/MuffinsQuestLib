@@ -1,17 +1,23 @@
 package net.firemuffin303.muffinsquestlib.common.quest;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.DynamicOps;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
 import net.firemuffin303.muffinsquestlib.common.quest.data.QuestData;
 import net.firemuffin303.muffinsquestlib.common.registry.ModRegistries;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class QuestInstance {
@@ -19,6 +25,10 @@ public class QuestInstance {
     private Map<QuestType<?>,List<Integer>> progress = new HashMap<>();
     private State state = State.PROGRESSING;
     public int time;
+
+    public static final Codec<Map<QuestType<?>,List<Integer>>> PROGRESS_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.unboundedMap(ModRegistries.QUEST_TYPE_REGISTRY.getCodec(),Codec.INT.listOf()).fieldOf("progress").forGetter(questTypeListMap -> questTypeListMap)
+    ).apply(instance,Map::copyOf));
 
     public QuestInstance(Quest quest,int time){
         this.quest = quest;
@@ -37,6 +47,11 @@ public class QuestInstance {
         return time;
     }
 
+    public Map<QuestType<?>,List<Integer>> setProgressCodec(Map<QuestType<?>, List<Integer>> progress) {
+        this.progress = progress;
+        return this.progress;
+    }
+
     public void setProgress(Map<QuestType<?>, List<Integer>> progress) {
         this.progress = progress;
     }
@@ -53,6 +68,12 @@ public class QuestInstance {
     public void addProgression(QuestType<?> questType, int index, int value) {
         List<Integer> list = this.getProgressType(questType);
         list.set(index,list.get(index) + value);
+        this.checkProgression();
+    }
+
+    public void setProgression(QuestType<?> questType, int index, int value) {
+        List<Integer> list = this.getProgressType(questType);
+        list.set(index,value);
         this.checkProgression();
     }
 
@@ -85,6 +106,46 @@ public class QuestInstance {
         return quest.definition.rewards();
     }
 
+    //NBT
+    public void writeNbt(NbtCompound nbtCompound){
+        /*
+        DataResult<NbtElement> dataResult = Quest.CODEC.encodeStart(NbtOps.INSTANCE,this.quest);
+        Objects.requireNonNull(MuffinsQuestLib.LOGGER);
+        dataResult.resultOrPartial(MuffinsQuestLib.LOGGER::error).ifPresent(nbtElement -> {
+            nbtCompound.put("Quest",nbtElement);
+        });
+
+         */
+
+        NbtCompound questInstance = new NbtCompound();
+        questInstance.putString("QuestID", Objects.requireNonNull(ModRegistries.QUEST_REGISTRY.getId(this.quest)).toString());
+
+
+        PROGRESS_CODEC.encodeStart(NbtOps.INSTANCE,this.progress)
+                .resultOrPartial(MuffinsQuestLib.LOGGER::error).ifPresent(nbtElement -> questInstance.put("Progress",nbtElement));
+        questInstance.putString("State",this.state.name());
+        questInstance.putInt("Time",this.time);
+        nbtCompound.put("QuestInstance",questInstance);
+    }
+
+    public static QuestInstance readNbt(NbtCompound nbtCompound){
+
+        NbtCompound questInstanceNBT = nbtCompound.getCompound("QuestInstance");
+        Quest quest = ModRegistries.QUEST_REGISTRY.get(Identifier.tryParse(questInstanceNBT.getString("QuestID")));
+        int time = questInstanceNBT.getInt("Time");
+
+        QuestInstance questInstance = new QuestInstance(quest,time);
+        State state = State.valueOf(questInstanceNBT.getString("State"));
+        questInstance.setState(state);
+        PROGRESS_CODEC.parse(new Dynamic<>(NbtOps.INSTANCE,questInstanceNBT.get("Progress")))
+                .resultOrPartial(MuffinsQuestLib.LOGGER::error).ifPresent(questInstance::setProgress);
+
+
+        return questInstance;
+    }
+
+
+
     //Network
     public void toPacket(PacketByteBuf packetByteBuf) {
         this.quest.toPacket(packetByteBuf);
@@ -112,8 +173,12 @@ public class QuestInstance {
 
 
     public enum State{
-        PROGRESSING,
-        FAIL,
-        SUCCESS
+        PROGRESSING("progressing"),
+        FAIL("fail"),
+        SUCCESS("success");
+
+        State(String progressing) {
+
+        }
     }
 }

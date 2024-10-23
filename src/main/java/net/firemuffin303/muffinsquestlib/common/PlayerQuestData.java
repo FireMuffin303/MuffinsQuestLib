@@ -1,10 +1,13 @@
 package net.firemuffin303.muffinsquestlib.common;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
 import net.firemuffin303.muffinsquestlib.common.network.ClearQuestInstancePacket;
 import net.firemuffin303.muffinsquestlib.common.network.UpdateQuestInstancePacket;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvents;
 import org.jetbrains.annotations.Nullable;
@@ -30,7 +33,12 @@ public class PlayerQuestData {
                     this.questInstance.time--;
                 }
             } else if (this.questInstance.getState() == QuestInstance.State.SUCCESS && this.player instanceof ServerPlayerEntity serverPlayerEntity) {
-                this.questInstance.getRewards().forEach(serverPlayerEntity::giveItemStack);
+                this.questInstance.getRewards().forEach(itemStack -> {
+                    if(!serverPlayerEntity.giveItemStack(itemStack.copy())){
+                        MuffinsQuestLib.LOGGER.info(itemStack.toString());
+                        serverPlayerEntity.dropStack(itemStack.copy());
+                    }
+                });
                 serverPlayerEntity.playSound(SoundEvents.ENTITY_ARROW_HIT_PLAYER,1.0f,1.0f);
                 this.clearQuest(serverPlayerEntity);
             }
@@ -46,6 +54,16 @@ public class PlayerQuestData {
         if(this.player instanceof ServerPlayerEntity serverPlayerEntity){
             ServerPlayNetworking.send(serverPlayerEntity,new UpdateQuestInstancePacket(this.questInstance));
         }
+    }
+
+    public void writeCustomDataToNbt(NbtCompound nbtCompound) {
+        if(this.questInstance != null){
+            this.questInstance.writeNbt(nbtCompound);
+        }
+    }
+
+    public void readCustomDataToNbt(NbtCompound nbtCompound){
+        this.questInstance = QuestInstance.readNbt(nbtCompound);
     }
 
     public @Nullable QuestInstance getQuestInstance() {

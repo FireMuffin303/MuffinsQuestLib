@@ -15,6 +15,9 @@ public  class QuestType<T extends QuestData> {
         this.function = fromPacket;
     }
 
+    public Codec<T> getCodec() {
+        return this.codec;
+    }
 
 
     public static class Builder<T extends QuestData>{
