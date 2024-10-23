@@ -39,6 +39,7 @@ public class QuestInfoScreen extends Screen {
     private final List<QuestDataButtonWidget> questDataButtonWidgets = new ArrayList<>();
     private boolean shouldScroll;
     private float scrollAmount = 0;
+    private float scrollScale = 0;
 
     public QuestInfoScreen() {
         super(Text.translatable("quest_info_screen.title"));
@@ -50,10 +51,12 @@ public class QuestInfoScreen extends Screen {
         int i = (this.width - 176) /2;
         int j = (this.height - 166) /2;
         Objects.requireNonNull(this.client);
-        int h = (int) ((this.scrollAmount * 102)-j)*-1;
         if(this.client.player != null){
             if(((PlayerQuestData.PlayerQuestDataAccessor)this.client.player).questLib$getData().hasQuest()){
                 this.questInstance = ((PlayerQuestData.PlayerQuestDataAccessor)this.client.player).questLib$getData().getQuestInstance();
+                for(QuestType<?> questType: this.questInstance.getQuest().questTypes.keySet().stream().toList()) {
+                    this.scrollScale += this.questInstance.getQuestData(questType).size();
+                }
             }
         }
 
@@ -66,7 +69,7 @@ public class QuestInfoScreen extends Screen {
             }
         }));
 
-        this.shouldScroll = ((PlayerQuestData.PlayerQuestDataAccessor)this.client.player).questLib$getData().hasQuest();
+        this.shouldScroll = ((PlayerQuestData.PlayerQuestDataAccessor)this.client.player).questLib$getData().hasQuest() && this.scrollScale > 1;
 
     }
 
@@ -96,7 +99,7 @@ public class QuestInfoScreen extends Screen {
 
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         if (this.shouldScroll) {
-            float f = (float)amount / (float)3;
+            float f = (float)amount / this.scrollScale;
             this.scrollAmount = MathHelper.clamp(this.scrollAmount - f, 0.0F, 1.0F);
         }
 
@@ -115,7 +118,7 @@ public class QuestInfoScreen extends Screen {
         Objects.requireNonNull(this.client);
 
         int j = (this.height - 166) /2;
-        y = (int) ((this.scrollAmount * 102)-y)*-1;
+        y = (int) ((this.scrollAmount * 70)-y)*-1;
         if(this.client.player != null){
             if(((PlayerQuestData.PlayerQuestDataAccessor)this.client.player).questLib$getData().getQuestInstance() == null){
                 context.drawText(this.textRenderer,Text.translatable("quest_info_screen.no_quest"),x+12,y+70,0xffffff,false);
@@ -145,7 +148,7 @@ public class QuestInfoScreen extends Screen {
                 }
 
                 context.drawItemWithoutEntity(new ItemStack(ModItems.QUEST_PAPER_ITEM,1),x+10,y+26);
-                context.drawText(this.textRenderer,Text.translatable("quest_info_screen.quest_name", ModRegistries.QUEST_REGISTRY.getId(questInstance.getQuest())),x+32,y+30,0xffffff,false);
+                context.drawText(this.textRenderer,Text.translatable("quest_info_screen.quest_name", ""),x+32,y+30,0xffffff,false);
 
                 context.drawText(this.textRenderer,Text.translatable(questInstance.getQuest().description),x+12,y+46,0xffffff,false);
 

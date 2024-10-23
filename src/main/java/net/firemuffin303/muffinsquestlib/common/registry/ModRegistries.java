@@ -1,5 +1,6 @@
 package net.firemuffin303.muffinsquestlib.common.registry;
 
+import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
@@ -7,6 +8,7 @@ import net.firemuffin303.muffinsquestlib.common.quest.Quest;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestType;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.util.Identifier;
 
 public class ModRegistries {
     public static final RegistryKey<Registry<QuestType<?>>> QUEST_TYPE_KEY = RegistryKey.ofRegistry(MuffinsQuestLib.modId("quest_type"));
@@ -16,6 +18,11 @@ public class ModRegistries {
     public static final Registry<Quest> QUEST_REGISTRY = FabricRegistryBuilder.createSimple(ModRegistries.QUEST_KEY).attribute(RegistryAttribute.SYNCED).buildAndRegister();
 
 
+    public static final RegistryKey<Quest> TEST = RegistryKey.of(QUEST_KEY,MuffinsQuestLib.modId("test"));
 
-    public static void init(){}
+
+    public static void init(){
+        //DynamicRegistries.register(QUEST_KEY,Quest.CODEC);
+        Registry.register(QUEST_REGISTRY,TEST,ModQuests.KILL_MULTIPLE_10);
+    }
 }

@@ -1,6 +1,8 @@
 package net.firemuffin303.muffinsquestlib.common.quest.data;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.firemuffin303.muffinsquestlib.common.quest.QuestType;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.entity.LivingEntity;
@@ -9,6 +11,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 
 public interface QuestData {
+
 
     int getRequirementAmount();
 
@@ -20,4 +23,7 @@ public interface QuestData {
 
     void tooltipRender(TextRenderer textRenderer, int x, int y, DrawContext context);
 
+    <T extends QuestData> Codec<T> getCodec();
+
+    QuestType<?> getType();
 }

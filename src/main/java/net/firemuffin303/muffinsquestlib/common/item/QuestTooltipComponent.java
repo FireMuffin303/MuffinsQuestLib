@@ -2,22 +2,11 @@ package net.firemuffin303.muffinsquestlib.common.item;
 
 import net.firemuffin303.muffinsquestlib.common.quest.QuestInstance;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestType;
-import net.firemuffin303.muffinsquestlib.common.quest.data.KillEntityQuestData;
 import net.firemuffin303.muffinsquestlib.common.quest.data.QuestData;
-import net.firemuffin303.muffinsquestlib.common.registry.ModRegistries;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LightningEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import org.joml.Quaternionf;
 
@@ -29,11 +18,16 @@ public class QuestTooltipComponent implements TooltipComponent {
 
     public QuestTooltipComponent(QuestTooltipData questTooltipData){
         this.questInstance = questTooltipData.getQuestInstance();
+
     }
 
     @Override
     public int getHeight() {
-        return 50;
+        int height = 32;
+        for(QuestType<?> questType: questInstance.getQuest().questTypes.keySet().stream().toList()) {
+            height += this.questInstance.getQuestData(questType).size() * 12;
+        }
+        return height;
     }
 
     @Override

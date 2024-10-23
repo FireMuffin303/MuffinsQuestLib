@@ -1,0 +1,28 @@
+{
+  "definition": {
+    "experience": 20,
+    "reward_item": [
+      {
+        "Count": 10,
+        "id": "minecraft:leather"
+      },
+      {
+        "Count": 1,
+        "id": "minecraft:emerald"
+      }
+    ]
+  },
+  "description": "quest.kill_zombie_10.desc",
+  "quest_type": {
+    "muffins_questlib:kill_entity": [
+      {
+        "type": "muffins_questlib:kill_entity",
+        "entity_requirements": {
+          "type": "minecraft:zombie",
+          "amount": 10
+        }
+      }
+    ]
+  },
+  "rarity": "COMMON"
+}

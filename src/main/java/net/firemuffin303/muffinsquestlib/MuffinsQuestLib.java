@@ -2,7 +2,6 @@ package net.firemuffin303.muffinsquestlib;
 
 import com.mojang.logging.LogUtils;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.firemuffin303.muffinsquestlib.common.PlayerQuestData;
@@ -29,16 +28,21 @@ public class MuffinsQuestLib implements ModInitializer {
             .displayName(Text.literal("Quest Library"))
             .icon(() -> new ItemStack(ModItems.QUEST_PAPER_ITEM))
             .entries((displayContext, entries) -> {
+                LOGGER.info(displayContext.lookup().getOptionalWrapper(ModRegistries.QUEST_KEY).toString());
+
                 displayContext.lookup().getOptionalWrapper(ModRegistries.QUEST_KEY).ifPresent(questImpl -> {
-                    questImpl.streamEntries().map(RegistryEntry::value)
+                    questImpl.streamEntries().map(entry -> entry.)
                             .map(QuestPaperItem::getQuestPaper)
                             .forEach(entries::add);
                 });
             }).build();
 
+
     @Override
     public void onInitialize() {
         Registry.register(Registries.ITEM_GROUP, MuffinsQuestLib.modId("main"),MOD_ITEM_GROUP);
+
+
 
         ModRegistries.init();
         ModQuestTypes.init();

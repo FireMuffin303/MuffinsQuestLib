@@ -2,6 +2,8 @@ package net.firemuffin303.muffinsquestlib.common.quest.data;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.firemuffin303.muffinsquestlib.common.quest.QuestType;
+import net.firemuffin303.muffinsquestlib.common.registry.ModQuestTypes;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.entity.EntityType;
@@ -11,9 +13,6 @@ import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
-import net.minecraft.text.TextColor;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Formatting;
 
 public record KillEntityQuestData(EntityRequirementEntry entityRequirementEntry) implements QuestData {
     public static final Codec<KillEntityQuestData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -32,8 +31,18 @@ public record KillEntityQuestData(EntityRequirementEntry entityRequirementEntry)
     @Override
     public void tooltipRender(TextRenderer textRenderer, int x, int y, DrawContext context) {
         context.drawText(textRenderer, Text.of("* "+ Text.translatable("muffins_questlib.questdata.kill_entity.tooltip",
-                this.getRequirementAmount(),Text.translatable(getEntityRequirements().entityType.toString()).append(this.getRequirementAmount() > 0 ? "s":"")).getString()
+                this.getRequirementAmount(),Text.translatable(getEntityRequirements().entityType.toString())).getString()
         ),x,y, 16755200,false);
+    }
+
+    @Override
+    public <T extends QuestData> Codec<T> getCodec() {
+        return null;
+    }
+
+    @Override
+    public QuestType<?> getType() {
+        return ModQuestTypes.KILL_ENTITY_DATA;
     }
 
 

@@ -1,0 +1,76 @@
+{
+  "definition": {
+    "experience": 20,
+    "reward_item": [
+      {
+        "Count": 32,
+        "id": "minecraft:diamond"
+      },
+      {
+        "Count": 1,
+        "id": "minecraft:netherite_ingot"
+      },
+      {
+        "Count": 1,
+        "id": "minecraft:gold_ingot"
+      },
+      {
+        "Count": 1,
+        "id": "minecraft:echo_shard"
+      },
+      {
+        "Count": 1,
+        "id": "minecraft:oak_planks"
+      },
+      {
+        "Count": 1,
+        "id": "minecraft:glow_lichen"
+      },
+      {
+        "Count": 1,
+        "id": "minecraft:leather"
+      }
+    ]
+  },
+  "description": "quest.kill_spider_10.desc",
+  "quest_type": {
+    "muffins_questlib:kill_entity": [
+      {
+        "type": "muffins_questlib:kill_entity",
+        "entity_requirements": {
+          "type": "minecraft:spider",
+          "amount": 1
+        }
+      },
+      {
+        "type": "muffins_questlib:kill_entity",
+        "entity_requirements": {
+          "type": "minecraft:creeper",
+          "amount": 1
+        }
+      },
+      {
+        "type": "muffins_questlib:kill_entity",
+        "entity_requirements": {
+          "type": "minecraft:zombie",
+          "amount": 1
+        }
+      },
+      {
+        "type": "muffins_questlib:kill_entity",
+        "entity_requirements": {
+          "type": "minecraft:skeleton",
+          "amount": 1
+        }
+      },
+      {
+        "type": "muffins_questlib:kill_entity",
+        "entity_requirements": {
+          "type": "minecraft:enderman",
+          "amount": 1
+        }
+      }
+    ]
+  },
+  "rarity": "COMMON"
+}

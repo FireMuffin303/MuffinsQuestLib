@@ -1,0 +1,8 @@
+{
+  "sound_event": {
+    "sound_id": "item.goat_horn.sound.1"
+  },
+  "use_duration": 140,
+  "range": 256.0
+
+}

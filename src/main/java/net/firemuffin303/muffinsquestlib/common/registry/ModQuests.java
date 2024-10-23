@@ -7,11 +7,16 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.text.Text;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ModQuests {
+    public static final Map<String,Quest> QUESTS = new HashMap<>();
+
     public static final Quest KILL_ZOMBIE_10 = register("kill_zombie_10",
             new Quest(new Quest.Definition(List.of(new ItemStack(Items.LEATHER,10),new ItemStack(Items.EMERALD,1)),20),
             "quest.kill_zombie_10.desc")
@@ -40,9 +45,15 @@ public class ModQuests {
                     .addQuest(ModQuestTypes.KILL_ENTITY_DATA,new KillEntityQuestData(new KillEntityQuestData.EntityRequirementEntry(EntityType.ENDERMAN,1)))
     );
 
+
     public static void init(){}
 
+
     public static Quest register(String id,Quest quest){
-        return Registry.register(ModRegistries.QUEST_REGISTRY, MuffinsQuestLib.modId(id),quest);
+        QUESTS.put(id, quest);
+
+        //Registry.register(ModRegistries.QUEST_KEY,RegistryKey.of(ModRegistries.QUEST_KEY,MuffinsQuestLib.modId(id)),quest);
+        return quest;
+        //return Registry.register(ModRegistries.QUEST_REGISTRY, MuffinsQuestLib.modId(id),quest);
     }
 }
