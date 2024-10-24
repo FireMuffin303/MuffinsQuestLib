@@ -70,7 +70,7 @@ public class PlayerQuestData {
         return questInstance;
     }
 
-    private void clearQuest(ServerPlayerEntity serverPlayerEntity) {
+    public void clearQuest(ServerPlayerEntity serverPlayerEntity) {
         ServerPlayNetworking.send(serverPlayerEntity,new ClearQuestInstancePacket());
         this.questInstance = null;
     }

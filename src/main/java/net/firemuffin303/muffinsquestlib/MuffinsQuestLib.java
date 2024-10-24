@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.firemuffin303.muffinsquestlib.common.PlayerQuestData;
+import net.firemuffin303.muffinsquestlib.common.command.ModCommands;
 import net.firemuffin303.muffinsquestlib.common.item.QuestPaperItem;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestInstance;
 import net.firemuffin303.muffinsquestlib.common.registry.*;
@@ -38,6 +39,7 @@ public class MuffinsQuestLib implements ModInitializer {
         Registry.register(Registries.ITEM_GROUP, MuffinsQuestLib.modId("main"),MOD_ITEM_GROUP);
 
         ModRegistries.init();
+        ModCommands.init();
         ModSoundEvents.init();
         ModQuestTypes.init();
         ModQuests.init();

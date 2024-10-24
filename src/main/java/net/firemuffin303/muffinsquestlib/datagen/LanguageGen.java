@@ -19,6 +19,7 @@ public class LanguageGen extends FabricLanguageProvider {
         translationBuilder.add("quest_info_screen.progress","%s (%d/%d)");
         translationBuilder.add("quest_info_screen.cancel_quest","Cancel Quest");
         translationBuilder.add("muffins_questlib.questdata.kill_entity.tooltip", "Kill %d %s");
+        translationBuilder.add("command.questlib.clear.success","Successfully remove quest from %s");
     }
 
     public static class ThaiLanguage extends FabricLanguageProvider {
