@@ -7,7 +7,6 @@ import net.firemuffin303.muffinsquestlib.common.quest.data.QuestData;
 import net.firemuffin303.muffinsquestlib.common.registry.ModRegistries;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.text.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,8 +54,17 @@ public class Quest {
 
     public List<QuestData> getQuests(QuestType<?> questType) {
         if(this.questTypes.get(questType) == null){
-            this.questTypes.put(questType,new ArrayList<>());
+            List<QuestData> questData = new ArrayList<>();
+            this.questTypes.put(questType,questData);
         }
+        return this.questTypes.get(questType);
+    }
+
+    public boolean hasQuestType(QuestType<?> questType){
+        return this.getQuestType(questType) != null;
+    }
+
+    public List<QuestData> getQuestType(QuestType<?> questType){
         return this.questTypes.get(questType);
     }
 

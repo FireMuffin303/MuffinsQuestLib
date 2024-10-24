@@ -2,7 +2,6 @@ package net.firemuffin303.muffinsquestlib.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 
 public class ModDataGen implements DataGeneratorEntrypoint {
     @Override

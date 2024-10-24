@@ -5,12 +5,8 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider
 import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
 import net.firemuffin303.muffinsquestlib.common.registry.ModQuests;
 import net.firemuffin303.muffinsquestlib.common.registry.ModRegistries;
-import net.minecraft.item.Instrument;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 
 import java.util.concurrent.CompletableFuture;
 

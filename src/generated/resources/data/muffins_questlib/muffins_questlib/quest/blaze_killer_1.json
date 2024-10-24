@@ -1,0 +1,33 @@
+{
+  "definition": {
+    "experience": 15,
+    "reward_item": [
+      {
+        "Count": 5,
+        "id": "minecraft:blaze_powder"
+      }
+    ]
+  },
+  "description": "Kill 5 Blazes and Collect 3 Blaze Rods",
+  "quest_type": {
+    "muffins_questlib:collect_item": [
+      {
+        "type": "muffins_questlib:collect_item",
+        "itemstack_requirements": {
+          "Count": 3,
+          "id": "minecraft:blaze_rod"
+        }
+      }
+    ],
+    "muffins_questlib:kill_entity": [
+      {
+        "type": "muffins_questlib:kill_entity",
+        "entity_requirements": {
+          "type": "minecraft:blaze",
+          "amount": 5
+        }
+      }
+    ]
+  },
+  "rarity": "COMMON"
+}

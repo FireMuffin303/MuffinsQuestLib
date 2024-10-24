@@ -14,8 +14,8 @@ public class CollectItemCondition {
 
     public void trigger(ServerPlayerEntity serverPlayerEntity, ItemStack item){
         PlayerQuestData playerQuestData = ((PlayerQuestData.PlayerQuestDataAccessor)serverPlayerEntity).questLib$getData();
-        if(playerQuestData.getQuestInstance() != null){
-            List<QuestData> quests = playerQuestData.getQuestInstance().getQuest().getQuests(ModQuestTypes.COLLECT_ITEM_DATA);
+        if(playerQuestData.getQuestInstance() != null && playerQuestData.getQuestInstance().getQuest().hasQuestType(ModQuestTypes.COLLECT_ITEM_DATA)){
+            List<QuestData> quests = playerQuestData.getQuestInstance().getQuest().getQuestType(ModQuestTypes.COLLECT_ITEM_DATA);
 
             for(int i = 0; i < quests.size();i++){
                 if(quests.get(i).checkItem(serverPlayerEntity,item) && playerQuestData.getQuestInstance().getProgressType(ModQuestTypes.COLLECT_ITEM_DATA).get(i) < item.getCount()){

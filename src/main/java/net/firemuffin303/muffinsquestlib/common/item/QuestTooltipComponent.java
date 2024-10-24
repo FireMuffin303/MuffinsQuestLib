@@ -1,10 +1,8 @@
 package net.firemuffin303.muffinsquestlib.common.item;
 
-import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestInstance;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestType;
 import net.firemuffin303.muffinsquestlib.common.quest.data.QuestData;
-import net.firemuffin303.muffinsquestlib.common.registry.ModQuestTypes;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.TooltipComponent;

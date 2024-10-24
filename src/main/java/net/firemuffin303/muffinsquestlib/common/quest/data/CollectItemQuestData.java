@@ -12,7 +12,6 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 
 public record CollectItemQuestData(ItemStack itemStack) implements QuestData{
     public static final Codec<CollectItemQuestData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -61,10 +60,6 @@ public record CollectItemQuestData(ItemStack itemStack) implements QuestData{
         return null;
     }
 
-    @Override
-    public QuestType<?> getType() {
-        return ModQuestTypes.COLLECT_ITEM_DATA;
-    }
 
     public static CollectItemQuestData fromPacket(PacketByteBuf packetByteBuf) {
         return new CollectItemQuestData(packetByteBuf.readItemStack());

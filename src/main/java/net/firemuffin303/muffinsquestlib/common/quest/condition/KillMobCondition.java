@@ -16,8 +16,8 @@ public class KillMobCondition {
 
     public void trigger(ServerPlayerEntity serverPlayerEntity, ServerWorld world, LivingEntity target){
         PlayerQuestData playerQuestData = ((PlayerQuestData.PlayerQuestDataAccessor)serverPlayerEntity).questLib$getData();
-        if(playerQuestData.getQuestInstance() != null){
-            List<QuestData> quests = playerQuestData.getQuestInstance().getQuest().getQuests(ModQuestTypes.KILL_ENTITY_DATA);
+        if(playerQuestData.getQuestInstance() != null && playerQuestData.getQuestInstance().getQuest().hasQuestType(ModQuestTypes.KILL_ENTITY_DATA)){
+            List<QuestData> quests = playerQuestData.getQuestInstance().getQuest().getQuestType(ModQuestTypes.KILL_ENTITY_DATA);
 
             for(int i = 0; i < quests.size();i++){
                 if(quests.get(i).checkKillOther(serverPlayerEntity,world,target)){

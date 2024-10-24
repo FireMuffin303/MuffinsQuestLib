@@ -8,7 +8,6 @@ import net.firemuffin303.muffinsquestlib.common.quest.Quest;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestType;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
-import net.minecraft.util.Identifier;
 
 public class ModRegistries {
     public static final RegistryKey<Registry<QuestType<?>>> QUEST_TYPE_KEY = RegistryKey.ofRegistry(MuffinsQuestLib.modId("quest_type"));

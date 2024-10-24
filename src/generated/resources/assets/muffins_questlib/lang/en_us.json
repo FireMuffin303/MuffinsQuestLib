@@ -1,4 +1,5 @@
 {
+  "command.questlib.clear.success": "Successfully remove quest from %s",
   "item.muffins_questlib.quest_paper": "Quest Paper",
   "muffins_questlib.questdata.kill_entity.tooltip": "Kill %d %s",
   "quest_info_screen.cancel_quest": "Cancel Quest",

@@ -1,6 +1,5 @@
 package net.firemuffin303.muffinsquestlib.client.screen;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
@@ -10,7 +9,6 @@ import net.firemuffin303.muffinsquestlib.common.quest.QuestInstance;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestType;
 import net.firemuffin303.muffinsquestlib.common.quest.data.QuestData;
 import net.firemuffin303.muffinsquestlib.common.registry.ModItems;
-import net.firemuffin303.muffinsquestlib.common.registry.ModRegistries;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -18,7 +16,6 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.PressableWidget;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;

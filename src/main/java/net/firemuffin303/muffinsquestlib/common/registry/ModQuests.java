@@ -1,16 +1,11 @@
 package net.firemuffin303.muffinsquestlib.common.registry;
 
-import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
 import net.firemuffin303.muffinsquestlib.common.quest.Quest;
 import net.firemuffin303.muffinsquestlib.common.quest.data.CollectItemQuestData;
 import net.firemuffin303.muffinsquestlib.common.quest.data.KillEntityQuestData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.tag.ItemTags;
-import net.minecraft.text.Text;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,6 +1,5 @@
 package net.firemuffin303.muffinsquestlib.common.item;
 
-import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
 import net.firemuffin303.muffinsquestlib.common.PlayerQuestData;
 import net.firemuffin303.muffinsquestlib.common.quest.Quest;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestInstance;
@@ -8,23 +7,17 @@ import net.firemuffin303.muffinsquestlib.common.registry.ModItems;
 import net.firemuffin303.muffinsquestlib.common.registry.ModRegistries;
 import net.firemuffin303.muffinsquestlib.common.registry.ModSoundEvents;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.item.TooltipData;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 

@@ -1,0 +1,31 @@
+{
+  "definition": {
+    "experience": 5,
+    "reward_item": [
+      {
+        "Count": 20,
+        "id": "minecraft:oak_planks"
+      }
+    ]
+  },
+  "description": "Collect 5 Oak & Birch Planks",
+  "quest_type": {
+    "muffins_questlib:collect_item": [
+      {
+        "type": "muffins_questlib:collect_item",
+        "itemstack_requirements": {
+          "Count": 5,
+          "id": "minecraft:oak_planks"
+        }
+      },
+      {
+        "type": "muffins_questlib:collect_item",
+        "itemstack_requirements": {
+          "Count": 5,
+          "id": "minecraft:birch_planks"
+        }
+      }
+    ]
+  },
+  "rarity": "COMMON"
+}

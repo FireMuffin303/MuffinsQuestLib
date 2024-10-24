@@ -9,12 +9,15 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
 import net.firemuffin303.muffinsquestlib.common.quest.data.QuestData;
 import net.firemuffin303.muffinsquestlib.common.registry.ModRegistries;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -107,18 +110,12 @@ public class QuestInstance {
     }
 
     //NBT
-    public void writeNbt(NbtCompound nbtCompound){
-        /*
-        DataResult<NbtElement> dataResult = Quest.CODEC.encodeStart(NbtOps.INSTANCE,this.quest);
-        Objects.requireNonNull(MuffinsQuestLib.LOGGER);
-        dataResult.resultOrPartial(MuffinsQuestLib.LOGGER::error).ifPresent(nbtElement -> {
-            nbtCompound.put("Quest",nbtElement);
-        });
-
-         */
-
+    public void writeNbt(PlayerEntity player, NbtCompound nbtCompound){
+        World world = player.getWorld();
         NbtCompound questInstance = new NbtCompound();
-        questInstance.putString("QuestID", Objects.requireNonNull(ModRegistries.QUEST_REGISTRY.getId(this.quest)).toString());
+        Identifier identifier = world.getRegistryManager().get(ModRegistries.QUEST_KEY).getId(this.quest);
+        Objects.requireNonNull(identifier);
+        questInstance.putString("QuestID", identifier.toString());
 
 
         PROGRESS_CODEC.encodeStart(NbtOps.INSTANCE,this.progress)
@@ -128,10 +125,11 @@ public class QuestInstance {
         nbtCompound.put("QuestInstance",questInstance);
     }
 
-    public static QuestInstance readNbt(NbtCompound nbtCompound){
+    public static QuestInstance readNbt(PlayerEntity player,NbtCompound nbtCompound){
 
         NbtCompound questInstanceNBT = nbtCompound.getCompound("QuestInstance");
-        Quest quest = ModRegistries.QUEST_REGISTRY.get(Identifier.tryParse(questInstanceNBT.getString("QuestID")));
+        Quest quest = player.getWorld().getRegistryManager().get(ModRegistries.QUEST_KEY).get(Identifier.tryParse(questInstanceNBT.getString("QuestID")));
+        Objects.requireNonNull(quest);
         int time = questInstanceNBT.getInt("Time");
 
         QuestInstance questInstance = new QuestInstance(quest,time);
