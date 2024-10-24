@@ -45,6 +45,11 @@ public class ModQuests {
                     .addQuest(ModQuestTypes.KILL_ENTITY_DATA,new KillEntityQuestData(new KillEntityQuestData.EntityRequirementEntry(EntityType.ENDERMAN,1)))
     );
 
+    public static final Quest KILL_PHANTOM_5 = register("kill_phantom_5",
+            new Quest(new Quest.Definition(List.of(new ItemStack(Items.ENDER_EYE)),10),"quest.kill_phantom_5.desc")
+                    .addQuest(ModQuestTypes.KILL_ENTITY_DATA,new KillEntityQuestData(new KillEntityQuestData.EntityRequirementEntry(EntityType.PHANTOM,5)))
+            );
+
 
     public static void init(){}
 

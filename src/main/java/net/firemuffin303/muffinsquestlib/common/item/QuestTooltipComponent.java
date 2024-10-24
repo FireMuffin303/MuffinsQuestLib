@@ -1,8 +1,10 @@
 package net.firemuffin303.muffinsquestlib.common.item;
 
+import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestInstance;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestType;
 import net.firemuffin303.muffinsquestlib.common.quest.data.QuestData;
+import net.firemuffin303.muffinsquestlib.common.registry.ModQuestTypes;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
@@ -24,6 +26,7 @@ public class QuestTooltipComponent implements TooltipComponent {
     @Override
     public int getHeight() {
         int height = 32;
+
         for(QuestType<?> questType: questInstance.getQuest().questTypes.keySet().stream().toList()) {
             height += this.questInstance.getQuestData(questType).size() * 12;
         }
@@ -42,6 +45,7 @@ public class QuestTooltipComponent implements TooltipComponent {
             int neoX = x;
             int neoY = y;
 
+
             for(QuestType<?> questType: questInstance.getQuest().questTypes.keySet().stream().toList()){
                 List<QuestData> data = this.questInstance.getQuestData(questType);
                 for (QuestData datum : data) {
@@ -49,6 +53,9 @@ public class QuestTooltipComponent implements TooltipComponent {
                     neoY+=8;
                 }
             }
+
+
+
 
             neoY += 2;
             context.drawText(textRenderer, Text.of("Rewards :"),x+2,neoY,0xffffff,false);

@@ -1,0 +1,24 @@
+{
+  "definition": {
+    "experience": 10,
+    "reward_item": [
+      {
+        "Count": 1,
+        "id": "minecraft:ender_eye"
+      }
+    ]
+  },
+  "description": "quest.kill_phantom_5.desc",
+  "quest_type": {
+    "muffins_questlib:kill_entity": [
+      {
+        "type": "muffins_questlib:kill_entity",
+        "entity_requirements": {
+          "type": "minecraft:phantom",
+          "amount": 5
+        }
+      }
+    ]
+  },
+  "rarity": "COMMON"
+}

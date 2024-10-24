@@ -2,6 +2,7 @@ package net.firemuffin303.muffinsquestlib.common.quest;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
 import net.firemuffin303.muffinsquestlib.common.quest.data.QuestData;
 import net.firemuffin303.muffinsquestlib.common.registry.ModRegistries;
 import net.minecraft.item.ItemStack;
@@ -54,7 +55,9 @@ public class Quest {
     }
 
     public List<QuestData> getQuests(QuestType<?> questType) {
-        this.questTypes.computeIfAbsent(questType, k -> new ArrayList<>());
+        if(this.questTypes.get(questType) == null){
+            this.questTypes.put(questType,new ArrayList<>());
+        }
         return this.questTypes.get(questType);
     }
 
