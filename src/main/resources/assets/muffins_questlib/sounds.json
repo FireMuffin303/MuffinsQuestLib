@@ -1,0 +1,8 @@
+{
+  "item.quest_paper.use": {
+    "sounds": [
+      "muffins_questlib:quest_paper_use"
+    ],
+    "subtitle": "muffins_questlib.subtitles.item.quest_paper.use"
+  }
+}

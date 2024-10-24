@@ -6,6 +6,7 @@ import net.firemuffin303.muffinsquestlib.common.quest.Quest;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestInstance;
 import net.firemuffin303.muffinsquestlib.common.registry.ModItems;
 import net.firemuffin303.muffinsquestlib.common.registry.ModRegistries;
+import net.firemuffin303.muffinsquestlib.common.registry.ModSoundEvents;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.item.TooltipData;
 import net.minecraft.client.world.ClientWorld;
@@ -29,21 +30,28 @@ public class QuestPaperItem extends Item {
     public static final String STORED_QUEST_KEY = "StoredQuests";
 
     public QuestPaperItem(Settings settings) {
-        super(settings);
+        super(settings.maxCount(1));
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
         if(!world.isClient && itemStack.getNbt() != null && itemStack.getNbt().getCompound(STORED_QUEST_KEY) != null && !((PlayerQuestData.PlayerQuestDataAccessor)user).questLib$getData().hasQuest()){
+
             NbtCompound nbtCompound = itemStack.getNbt().getCompound(STORED_QUEST_KEY);
             Quest playerQuest = ModRegistries.QUEST_REGISTRY.get(Identifier.tryParse(nbtCompound.getString("id")));
             int duration = nbtCompound.getInt("duration");
 
-            world.playSound(null,user.getBlockPos(), SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.PLAYERS,1.0f,1.0f);
             ((PlayerQuestData.PlayerQuestDataAccessor)user).questLib$getData().setQuestInstance(
                     new QuestInstance(playerQuest,duration)
             );
+
+            user.playSound(ModSoundEvents.QUEST_PAPER_USE,SoundCategory.PLAYERS,1.0f,1.0f);
+
+            if(!user.isCreative()){
+                itemStack.decrement(1);
+            }
+            return TypedActionResult.success(itemStack);
         }
 
         return super.use(world, user, hand);
