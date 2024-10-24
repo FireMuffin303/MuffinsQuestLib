@@ -5,7 +5,6 @@ import net.firemuffin303.muffinsquestlib.common.quest.QuestType;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -23,6 +22,8 @@ public interface QuestData {
     String toString();
 
     void tooltipRender(TextRenderer textRenderer, int x, int y, DrawContext context);
+
+    <T extends QuestData> Codec<T> getCodec();
 
     QuestType<?> getType();
 }

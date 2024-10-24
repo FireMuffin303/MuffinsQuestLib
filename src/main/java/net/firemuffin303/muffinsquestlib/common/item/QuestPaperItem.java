@@ -7,6 +7,7 @@ import net.firemuffin303.muffinsquestlib.common.quest.QuestInstance;
 import net.firemuffin303.muffinsquestlib.common.registry.ModItems;
 import net.firemuffin303.muffinsquestlib.common.registry.ModRegistries;
 import net.firemuffin303.muffinsquestlib.common.registry.ModSoundEvents;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.item.TooltipData;
 import net.minecraft.client.world.ClientWorld;
@@ -24,26 +25,28 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class QuestPaperItem extends Item {
     public static final String STORED_QUEST_KEY = "StoredQuests";
 
     public QuestPaperItem(Settings settings) {
-        super(settings.maxCount(1));
+        super(settings);
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
         if(!world.isClient && itemStack.getNbt() != null && itemStack.getNbt().getCompound(STORED_QUEST_KEY) != null && !((PlayerQuestData.PlayerQuestDataAccessor)user).questLib$getData().hasQuest()){
-
             NbtCompound nbtCompound = itemStack.getNbt().getCompound(STORED_QUEST_KEY);
-            Quest playerQuest = ModRegistries.QUEST_REGISTRY.get(Identifier.tryParse(nbtCompound.getString("id")));
+
+            Quest quest = world.getRegistryManager().get(ModRegistries.QUEST_KEY).get(Identifier.tryParse(nbtCompound.getString("quest")));
+
             int duration = nbtCompound.getInt("duration");
 
             ((PlayerQuestData.PlayerQuestDataAccessor)user).questLib$getData().setQuestInstance(
-                    new QuestInstance(playerQuest,duration)
+                    new QuestInstance(quest,duration)
             );
 
             user.playSound(ModSoundEvents.QUEST_PAPER_USE,SoundCategory.PLAYERS,1.0f,1.0f);
@@ -61,19 +64,23 @@ public class QuestPaperItem extends Item {
     public Optional<TooltipData> getTooltipData(ItemStack stack) {
         if(stack.getNbt() != null && stack.getNbt().getCompound(STORED_QUEST_KEY) != null){
             NbtCompound nbtCompound = stack.getNbt().getCompound(STORED_QUEST_KEY);
-            Quest playerQuest = ModRegistries.QUEST_REGISTRY.get(Identifier.tryParse(nbtCompound.getString("id")));
+
+            MinecraftClient minecraftClient = MinecraftClient.getInstance();
+            Objects.requireNonNull(minecraftClient.world);
+            Quest quest = minecraftClient.world.getRegistryManager().get(ModRegistries.QUEST_KEY).get(Identifier.tryParse(nbtCompound.getString("quest")));
+
             int duration = nbtCompound.getInt("duration");
 
-            QuestInstance questInstance = new QuestInstance(playerQuest,duration);
+            QuestInstance questInstance = new QuestInstance(quest,duration);
             return Optional.of(new QuestTooltipData(questInstance));
         }
         return super.getTooltipData(stack);
     }
 
-    public static ItemStack getQuestPaper(Quest quest){
+    public static ItemStack getQuestPaper(Identifier identifier,Quest quest){
         ItemStack itemStack = new ItemStack(ModItems.QUEST_PAPER_ITEM);
         NbtCompound nbtCompound = new NbtCompound();
-        nbtCompound.putString("id", String.valueOf(ModRegistries.QUEST_REGISTRY.getId(quest)));
+        nbtCompound.putString("quest",identifier.toString());
         nbtCompound.putInt("duration",2400);
         itemStack.getOrCreateNbt().put(STORED_QUEST_KEY,nbtCompound);
         return itemStack;

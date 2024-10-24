@@ -2,12 +2,16 @@ package net.firemuffin303.muffinsquestlib;
 
 import com.mojang.logging.LogUtils;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
+import net.fabricmc.fabric.api.client.model.loading.v1.PreparableModelLoadingPlugin;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.firemuffin303.muffinsquestlib.common.PlayerQuestData;
 import net.firemuffin303.muffinsquestlib.common.command.ModCommands;
 import net.firemuffin303.muffinsquestlib.common.item.QuestPaperItem;
+import net.firemuffin303.muffinsquestlib.common.quest.Quest;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestInstance;
 import net.firemuffin303.muffinsquestlib.common.registry.*;
 import net.minecraft.item.ItemGroup;
@@ -15,9 +19,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.profiler.Profiler;
 import org.slf4j.Logger;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 public class MuffinsQuestLib implements ModInitializer {
 
@@ -27,12 +37,12 @@ public class MuffinsQuestLib implements ModInitializer {
             .displayName(Text.literal("Quest Library"))
             .icon(() -> new ItemStack(ModItems.QUEST_PAPER_ITEM))
             .entries((displayContext, entries) -> {
+
                 displayContext.lookup().getOptionalWrapper(ModRegistries.QUEST_KEY).ifPresent(questImpl -> {
-                    questImpl.streamEntries().map(RegistryEntry::value)
-                            .map(QuestPaperItem::getQuestPaper)
-                            .forEach(entries::add);
+                    questImpl.streamEntries().map(questReference -> QuestPaperItem.getQuestPaper(questReference.registryKey().getValue(), questReference.value())).forEach(entries::add);
                 });
             }).build();
+
 
     @Override
     public void onInitialize() {
@@ -51,6 +61,8 @@ public class MuffinsQuestLib implements ModInitializer {
 
             }
         });
+
+
     }
 
     public static Identifier modId(String id){

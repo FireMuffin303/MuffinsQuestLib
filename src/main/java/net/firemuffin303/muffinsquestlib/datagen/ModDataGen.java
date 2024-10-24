@@ -11,5 +11,6 @@ public class ModDataGen implements DataGeneratorEntrypoint {
         pack.addProvider(ModelGen::new);
         pack.addProvider(LanguageGen::new);
         pack.addProvider(LanguageGen.ThaiLanguage::new);
+        pack.addProvider(QuestDataGen::new);
     }
 }

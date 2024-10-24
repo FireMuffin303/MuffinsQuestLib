@@ -150,7 +150,7 @@ public class QuestInfoScreen extends Screen {
                 }
 
                 context.drawItemWithoutEntity(new ItemStack(ModItems.QUEST_PAPER_ITEM,1),x+10,y+26);
-                context.drawText(this.textRenderer,Text.translatable("quest_info_screen.quest_name", ModRegistries.QUEST_REGISTRY.getId(questInstance.getQuest())),x+32,y+30,0xffffff,false);
+                context.drawText(this.textRenderer,Text.translatable("quest_info_screen.quest_name", ""),x+32,y+30,0xffffff,false);
 
                 Text description = Text.translatable(questInstance.getQuest().description);
                 this.textRenderer.getWidth(description);

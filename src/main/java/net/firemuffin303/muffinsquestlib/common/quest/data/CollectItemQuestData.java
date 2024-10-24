@@ -56,6 +56,16 @@ public record CollectItemQuestData(ItemStack itemStack) implements QuestData{
         return ModQuestTypes.COLLECT_ITEM_DATA;
     }
 
+    @Override
+    public <T extends QuestData> Codec<T> getCodec() {
+        return null;
+    }
+
+    @Override
+    public QuestType<?> getType() {
+        return ModQuestTypes.COLLECT_ITEM_DATA;
+    }
+
     public static CollectItemQuestData fromPacket(PacketByteBuf packetByteBuf) {
         return new CollectItemQuestData(packetByteBuf.readItemStack());
     }

@@ -54,7 +54,9 @@ public class Quest {
     }
 
     public List<QuestData> getQuests(QuestType<?> questType) {
-        this.questTypes.computeIfAbsent(questType, k -> new ArrayList<>());
+        if(this.questTypes.get(questType) == null){
+            this.questTypes.put(questType,new ArrayList<>());
+        }
         return this.questTypes.get(questType);
     }
 
