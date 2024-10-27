@@ -4,25 +4,18 @@
     "reward_item": [
       {
         "Count": 20,
-        "id": "minecraft:oak_planks"
+        "id": "minecraft:oak_sapling"
       }
     ]
   },
-  "description": "Collect 5 Oak & Birch Planks",
+  "description": "Collect 32 Oak Planks",
   "quest_type": {
     "muffins_questlib:collect_item": [
       {
         "type": "muffins_questlib:collect_item",
         "itemstack_requirements": {
-          "Count": 5,
+          "Count": 32,
           "id": "minecraft:oak_planks"
-        }
-      },
-      {
-        "type": "muffins_questlib:collect_item",
-        "itemstack_requirements": {
-          "Count": 5,
-          "id": "minecraft:birch_planks"
         }
       }
     ]

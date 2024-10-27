@@ -5,8 +5,12 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
 import net.firemuffin303.muffinsquestlib.common.quest.data.QuestData;
 import net.firemuffin303.muffinsquestlib.common.registry.ModRegistries;
+import net.minecraft.entity.EntityType;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.world.event.GameEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,6 +75,7 @@ public class Quest {
     public void setQuestTypes(Map<QuestType<?>, List<QuestData>> questTypes) {
         this.questTypes = questTypes;
     }
+
 
     //Network
     public void toPacket(PacketByteBuf packetByteBuf) {

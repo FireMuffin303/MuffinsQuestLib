@@ -4,31 +4,15 @@
     "reward_item": [
       {
         "Count": 32,
-        "id": "minecraft:diamond"
+        "id": "minecraft:iron_ingot"
       },
       {
-        "Count": 1,
-        "id": "minecraft:netherite_ingot"
-      },
-      {
-        "Count": 1,
+        "Count": 8,
         "id": "minecraft:gold_ingot"
       },
       {
-        "Count": 1,
-        "id": "minecraft:echo_shard"
-      },
-      {
-        "Count": 1,
-        "id": "minecraft:oak_planks"
-      },
-      {
-        "Count": 1,
-        "id": "minecraft:glow_lichen"
-      },
-      {
-        "Count": 1,
-        "id": "minecraft:leather"
+        "Count": 2,
+        "id": "minecraft:ender_pearl"
       }
     ]
   },

@@ -14,13 +14,8 @@ public class ModRegistries {
     public static final Registry<QuestType<?>> QUEST_TYPE_REGISTRY = FabricRegistryBuilder.createSimple(QUEST_TYPE_KEY).attribute(RegistryAttribute.SYNCED).buildAndRegister();
 
     public static final RegistryKey<Registry<Quest>> QUEST_KEY = RegistryKey.ofRegistry(MuffinsQuestLib.modId("quest"));
-    //public static final Registry<Quest> QUEST_REGISTRY = FabricRegistryBuilder.createSimple(ModRegistries.QUEST_KEY).attribute(RegistryAttribute.SYNCED).buildAndRegister();
-
-
-
 
     public static void init(){
         DynamicRegistries.registerSynced(QUEST_KEY,Quest.CODEC);
-        //Registry.register(QUEST_REGISTRY,TEST,ModQuests.KILL_MULTIPLE_10);
     }
 }

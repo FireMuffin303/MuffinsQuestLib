@@ -5,6 +5,10 @@
       {
         "Count": 10,
         "id": "minecraft:spider_eye"
+      },
+      {
+        "Count": 5,
+        "id": "minecraft:string"
       }
     ]
   },
