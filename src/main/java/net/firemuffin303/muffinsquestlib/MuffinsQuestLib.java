@@ -29,6 +29,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.lang.ref.Reference;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -42,7 +43,7 @@ public class MuffinsQuestLib implements ModInitializer {
             .entries((displayContext, entries) -> {
 
                 displayContext.lookup().getOptionalWrapper(ModRegistries.QUEST_KEY).ifPresent(questImpl -> {
-                    questImpl.streamEntries().map(questReference -> QuestPaperItem.getQuestPaper(questReference.registryKey().getValue())).forEach(entries::add);
+                    questImpl.streamEntries().map(questReference -> QuestPaperItem.getQuestPaper(questReference.registryKey().getValue(),18000)).forEach(entries::add);
                 });
             }).build();
 
@@ -85,7 +86,7 @@ public class MuffinsQuestLib implements ModInitializer {
         return new Identifier(MOD_ID,id);
     }
 
-    static class QuestTradeOffer implements TradeOffers.Factory{
+    public static class QuestTradeOffer implements TradeOffers.Factory{
         private final int price;
         private final int maxUses;
         private final int experience;
@@ -100,12 +101,9 @@ public class MuffinsQuestLib implements ModInitializer {
 
         @Override
         public @Nullable TradeOffer create(Entity entity, Random random) {
-            Optional<RegistryEntry.Reference<Quest>> quest = entity.getWorld().getRegistryManager().get(ModRegistries.QUEST_KEY).getRandom(random);
-            return quest.map(questReference ->
-                    new TradeOffer(new ItemStack(Items.EMERALD, this.price), QuestPaperItem.getQuestPaper(questReference.registryKey().getValue()), this.maxUses, this.experience, this.multiplier))
-                    .orElseGet(() ->
-                            new TradeOffer(new ItemStack(Items.EMERALD, this.price), new ItemStack(Items.PAPER, 8), this.maxUses, this.experience, this.multiplier));
-
+            List<RegistryEntry.Reference<Quest>> quests = entity.getWorld().getRegistryManager().get(ModRegistries.QUEST_KEY).streamEntries().filter(questReference -> questReference.isIn(ModTags.WANDERING_TRADER_QUESTS)).toList();
+            RegistryEntry.Reference<Quest> questReference = quests.get(random.nextInt(quests.size()-1));
+            return new TradeOffer(new ItemStack(Items.GOLD_INGOT,this.price), QuestPaperItem.getQuestPaper(questReference.registryKey().getValue(),18000),1,this.experience,0.05f);
         }
     }
 }

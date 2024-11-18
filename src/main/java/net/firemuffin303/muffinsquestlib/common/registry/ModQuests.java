@@ -33,12 +33,12 @@ public class ModQuests {
         questRegisterable.getRegistryLookup(ModRegistries.QUEST_KEY);
         questRegisterable.register(KILL_ZOMBIE_10,
                 new Quest(new Quest.Definition(List.of(new ItemStack(Items.LEATHER,10),new ItemStack(Items.EMERALD,1)),20),
-                        "quest.kill_zombie_10.desc")
+                        "Kill 10 Zombies")
                         .addQuest(ModQuestTypes.KILL_ENTITY_DATA,new KillEntityQuestData(new KillEntityQuestData.EntityRequirementEntry(EntityType.ZOMBIE,10))));
 
         questRegisterable.register(KILL_SPIDER_10,
                 new Quest(new Quest.Definition(List.of(new ItemStack(Items.SPIDER_EYE,10),new ItemStack(Items.STRING,5)),20),
-                "quest.kill_spider_10.desc")
+                "Kill 10 Spiders")
                 .addQuest(ModQuestTypes.KILL_ENTITY_DATA,new KillEntityQuestData(new KillEntityQuestData.EntityRequirementEntry(EntityType.SPIDER,10))));
 
         questRegisterable.register(KILL_MULTIPLE_10,
@@ -47,7 +47,7 @@ public class ModQuests {
                         new ItemStack(Items.GOLD_INGOT,8),
                         new ItemStack(Items.ENDER_PEARL,2)
                 ),20),
-                        "quest.kill_spider_10.desc")
+                        "Kill 1 Spider, 1 Creeper, 1 Zombie, 1 Skeleton and 1 Enderman")
                         .addQuest(ModQuestTypes.KILL_ENTITY_DATA,new KillEntityQuestData(new KillEntityQuestData.EntityRequirementEntry(EntityType.SPIDER,1)))
                         .addQuest(ModQuestTypes.KILL_ENTITY_DATA,new KillEntityQuestData(new KillEntityQuestData.EntityRequirementEntry(EntityType.CREEPER,1)))
                         .addQuest(ModQuestTypes.KILL_ENTITY_DATA,new KillEntityQuestData(new KillEntityQuestData.EntityRequirementEntry(EntityType.ZOMBIE,1)))
@@ -55,7 +55,7 @@ public class ModQuests {
                         .addQuest(ModQuestTypes.KILL_ENTITY_DATA,new KillEntityQuestData(new KillEntityQuestData.EntityRequirementEntry(EntityType.ENDERMAN,1))));
 
         questRegisterable.register(KILL_PHANTOM_5,
-                new Quest(new Quest.Definition(List.of(new ItemStack(Items.PHANTOM_MEMBRANE,12)),10),"quest.kill_phantom_5.desc")
+                new Quest(new Quest.Definition(List.of(new ItemStack(Items.PHANTOM_MEMBRANE,12)),10),"Kill 5 Phantom")
                         .addQuest(ModQuestTypes.KILL_ENTITY_DATA,new KillEntityQuestData(new KillEntityQuestData.EntityRequirementEntry(EntityType.PHANTOM,5))));
 
         questRegisterable.register(COLLECT_PLANKS_32,new Quest(

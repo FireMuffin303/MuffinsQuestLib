@@ -1,7 +1,10 @@
 {
   "command.questlib.clear.success": "Successfully remove quest from %s",
   "item.muffins_questlib.quest_paper": "Quest Paper",
-  "muffins_questlib.questdata.kill_entity.tooltip": "Kill %d %s",
+  "item.quest_paper.tooltip.collect_item": "✶ Collect %d %s",
+  "item.quest_paper.tooltip.kill_entity": "✶ Kill %d %s",
+  "item.quest_paper.tooltip.quest_time": "Time : (%d)",
+  "item.quest_paper.tooltip.rewards": "Rewards :",
   "quest_info_screen.cancel_quest": "Cancel Quest",
   "quest_info_screen.no_quest": "You don't have any quest. :(",
   "quest_info_screen.progress": "%s (%d/%d)",

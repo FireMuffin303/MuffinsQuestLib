@@ -18,8 +18,11 @@ public class LanguageGen extends FabricLanguageProvider {
         translationBuilder.add("quest_info_screen.quest_reward","Rewards");
         translationBuilder.add("quest_info_screen.progress","%s (%d/%d)");
         translationBuilder.add("quest_info_screen.cancel_quest","Cancel Quest");
-        translationBuilder.add("muffins_questlib.questdata.kill_entity.tooltip", "Kill %d %s");
         translationBuilder.add("command.questlib.clear.success","Successfully remove quest from %s");
+        translationBuilder.add("item.quest_paper.tooltip.quest_time","Time : (%d)");
+        translationBuilder.add("item.quest_paper.tooltip.kill_entity", "✶ Kill %d %s");
+        translationBuilder.add("item.quest_paper.tooltip.collect_item","✶ Collect %d %s");
+        translationBuilder.add("item.quest_paper.tooltip.rewards","Rewards :");
     }
 
     public static class ThaiLanguage extends FabricLanguageProvider {
@@ -36,7 +39,10 @@ public class LanguageGen extends FabricLanguageProvider {
             translationBuilder.add("quest_info_screen.quest_reward","รางวัล");
             translationBuilder.add("quest_info_screen.progress","%s (%d/%d)");
             translationBuilder.add("quest_info_screen.cancel_quest","ยกเลิกภารกิจ");
-            translationBuilder.add("muffins_questlib.questdata.kill_entity.tooltip", "ฆ่า %d %s");
+            translationBuilder.add("item.quest_paper.tooltip.quest_time","เวลา : (%d)");
+            translationBuilder.add("item.quest_paper.tooltip.kill_entity", "✶ ฆ่า %d %s");
+            translationBuilder.add("item.quest_paper.tooltip.collect_item","✶ เก็บ %d %s");
+            translationBuilder.add("item.quest_paper.tooltip.rewards","รางวัล :");
 
 
         }

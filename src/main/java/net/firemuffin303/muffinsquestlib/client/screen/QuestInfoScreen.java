@@ -17,6 +17,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.PressableWidget;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -121,7 +122,7 @@ public class QuestInfoScreen extends Screen {
         Objects.requireNonNull(this.client);
 
         int j = (this.height - 166) /2;
-        y = (int) (this.scrollScale*(this.scrollAmount * 14)-y)*-1;
+        y = (int) (this.scrollScale*(this.scrollAmount * 18)-y)*-1;
         if(this.client.player != null){
             if(((PlayerQuestData.PlayerQuestDataAccessor)this.client.player).questLib$getData().getQuestInstance() == null){
                 context.drawText(this.textRenderer,Text.translatable("quest_info_screen.no_quest"),x+12,y+70,0xffffff,false);
@@ -130,7 +131,21 @@ public class QuestInfoScreen extends Screen {
 
                 Objects.requireNonNull(questInstance);
 
-                int progressY = y+68;
+
+
+                context.drawItemWithoutEntity(new ItemStack(ModItems.QUEST_PAPER_ITEM,1),x+10,y+26);
+                context.drawText(this.textRenderer,Text.translatable("item.quest_paper.tooltip.quest_time", Text.of((questInstance.time/20)/60+":"+ (questInstance.time/20)%60 )),x+32,y+30,11184810,false);
+
+                Text description = Text.translatable(questInstance.getQuest().description);
+                List<OrderedText> textDescriptions = textRenderer.wrapLines(description,145);
+
+                int afterDescY = y + 46;
+                for (OrderedText orderedText:textDescriptions){
+                    context.drawText(this.textRenderer,orderedText,x+12,afterDescY,0xffffff,false);
+                    afterDescY += 12;
+                }
+
+                int progressY = afterDescY;
                 List<QuestType<?>> questTypes = questInstance.getQuest().questTypes.keySet().stream().toList();
                 for(QuestType<?> questType : questTypes){
                     for(int k = 0; k < questInstance.getQuest().getQuests(questType).size() ; k++) {
@@ -145,16 +160,6 @@ public class QuestInfoScreen extends Screen {
                         progressY += 19;
                     }
                 }
-
-                context.drawItemWithoutEntity(new ItemStack(ModItems.QUEST_PAPER_ITEM,1),x+10,y+26);
-                context.drawText(this.textRenderer,Text.translatable("quest_info_screen.quest_name", ""),x+32,y+30,0xffffff,false);
-
-                Text description = Text.translatable(questInstance.getQuest().description);
-                this.textRenderer.getWidth(description);
-
-                context.drawText(this.textRenderer,description,x+12,y+46,0xffffff,false);
-                context.drawText(this.textRenderer,Text.of((questInstance.time/20)/60+":"+ (questInstance.time/20)%60 ),x+12,y+58,0xffffff,false);
-
 
                 context.drawText(this.textRenderer,Text.translatable("quest_info_screen.quest_reward"),x+12,progressY+8,0xffffff,false);
 

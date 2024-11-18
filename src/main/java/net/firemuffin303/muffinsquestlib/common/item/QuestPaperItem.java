@@ -70,11 +70,11 @@ public class QuestPaperItem extends Item {
         return super.getTooltipData(stack);
     }
 
-    public static ItemStack getQuestPaper(Identifier identifier){
+    public static ItemStack getQuestPaper(Identifier identifier,int time){
         ItemStack itemStack = new ItemStack(ModItems.QUEST_PAPER_ITEM);
         NbtCompound nbtCompound = new NbtCompound();
         nbtCompound.putString("quest",identifier.toString());
-        nbtCompound.putInt("duration",2400);
+        nbtCompound.putInt("duration",time);
         itemStack.getOrCreateNbt().put(STORED_QUEST_KEY,nbtCompound);
         return itemStack;
     }

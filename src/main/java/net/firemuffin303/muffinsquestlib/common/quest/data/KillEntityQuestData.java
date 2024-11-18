@@ -31,9 +31,9 @@ public record KillEntityQuestData(EntityRequirementEntry entityRequirementEntry)
 
     @Override
     public void tooltipRender(TextRenderer textRenderer, int x, int y, DrawContext context) {
-        context.drawText(textRenderer, Text.of("* "+ Text.translatable("muffins_questlib.questdata.kill_entity.tooltip",
-                this.getRequirementAmount(),Text.translatable(getEntityRequirements().entityType.toString())).getString()
-        ),x,y, 16755200,false);
+        Text text = Text.translatable("item.quest_paper.tooltip.kill_entity",this.getRequirementAmount(),Text.translatable(getEntityRequirements().entityType.toString()).getString());
+
+        context.drawText(textRenderer, text,x,y, 16755200,false);
     }
 
     @Override
@@ -46,6 +46,11 @@ public record KillEntityQuestData(EntityRequirementEntry entityRequirementEntry)
         return ModQuestTypes.KILL_ENTITY_DATA;
     }
 
+    @Override
+    public int getTextWidth(TextRenderer textRenderer) {
+        Text text = Text.translatable("item.quest_paper.tooltip.kill_entity",this.getRequirementAmount(),Text.translatable(getEntityRequirements().entityType.toString()).getString());
+        return textRenderer.getWidth(text);
+    }
 
     //Quest Data
     @Override

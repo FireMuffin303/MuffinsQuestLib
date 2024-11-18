@@ -43,24 +43,6 @@ public class ModHudRender {
             drawContext.drawTexture(QuestInfoScreen.QUEST_SCREEN_TEXTURE,0,0,i,0,24,24);
             drawContext.drawText(client.textRenderer,Text.of((questInstance.time/20)/60+":"+ (questInstance.time/20)%60 ),26,8,0xffffff,false);
             drawContext.setShaderColor(1.0f,1.0f,1.0f,1.0f);
-            /*
-            Text text = Text.of(questInstance.getQuest().description);
-            drawContext.drawText(client.textRenderer, Text.literal("Quest :"+ text.getString()), 2,6,0x0b0b0b,false);
-            List<QuestType<?>> questTypes = questInstance.getQuest().questTypes.keySet().stream().toList();
-
-            int progressY = 14;
-
-            for(QuestType<?> questType : questTypes){
-                for(int i = 0; i < questInstance.getQuest().getQuests(questType).size() ; i++){
-                    int cureent = questInstance.getProgressType(questType).get(i);
-                    int requireAmount = questInstance.getQuest().getQuests(questType).get(i).getRequirementAmount();
-                    drawContext.drawText(client.textRenderer,Text.literal("Progress : "+ cureent +"/"+requireAmount),2,progressY,0x0b0b0b,false);
-                    progressY += 8;
-                }
-            }
-            drawContext.drawText(client.textRenderer, Text.literal("Time Left :"+  (questInstance.time/20)/60+":"+ (questInstance.time/20)%60 ), 2,progressY,0x0b0b0b,false);
-
-             */
         }
     }
 }

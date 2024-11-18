@@ -12,7 +12,7 @@
       }
     ]
   },
-  "description": "quest.kill_zombie_10.desc",
+  "description": "Kill 10 Zombies",
   "quest_type": {
     "muffins_questlib:kill_entity": [
       {

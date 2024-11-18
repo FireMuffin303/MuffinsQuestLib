@@ -128,6 +128,7 @@ public class Quest {
 
     public enum QuestRarity{
         COMMON("common"),
+        UNCOMMON("uncommon"),
         RARE("rare");
 
         QuestRarity(String value) {

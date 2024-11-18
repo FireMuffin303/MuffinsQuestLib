@@ -2,7 +2,6 @@ package net.firemuffin303.muffinsquestlib.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
 import net.firemuffin303.muffinsquestlib.common.quest.Quest;
 import net.firemuffin303.muffinsquestlib.common.registry.ModQuests;
 import net.firemuffin303.muffinsquestlib.common.registry.ModRegistries;

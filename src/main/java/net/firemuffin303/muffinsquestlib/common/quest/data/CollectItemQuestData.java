@@ -47,7 +47,14 @@ public record CollectItemQuestData(ItemStack itemStack) implements QuestData{
 
     @Override
     public void tooltipRender(TextRenderer textRenderer, int x, int y, DrawContext context) {
-        context.drawText(textRenderer,"* Collect "+ this.itemStack.getCount()+" " + Text.translatable(itemStack.getTranslationKey()).getString(),x,y, 16755200,false) ;
+        Text text = Text.translatable("item.quest_paper.tooltip.collect_item",this.itemStack.getCount(),Text.translatable(itemStack.getTranslationKey()).getString());
+        context.drawText(textRenderer,text,x,y, 16755200,false) ;
+    }
+
+    @Override
+    public int getTextWidth(TextRenderer textRenderer) {
+        Text text = Text.translatable("item.quest_paper.tooltip.collect_item",this.itemStack.getCount(),Text.translatable(itemStack.getTranslationKey()).getString());
+        return textRenderer.getWidth(text);
     }
 
     @Override

@@ -16,7 +16,7 @@
       }
     ]
   },
-  "description": "quest.kill_spider_10.desc",
+  "description": "Kill 1 Spider, 1 Creeper, 1 Zombie, 1 Skeleton and 1 Enderman",
   "quest_type": {
     "muffins_questlib:kill_entity": [
       {

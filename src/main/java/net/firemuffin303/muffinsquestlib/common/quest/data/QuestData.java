@@ -24,6 +24,8 @@ public interface QuestData {
 
     void tooltipRender(TextRenderer textRenderer, int x, int y, DrawContext context);
 
+    int getTextWidth(TextRenderer textRenderer);
+
     <T extends QuestData> Codec<T> getCodec();
 
     QuestType<?> getType();

@@ -8,7 +8,7 @@
       }
     ]
   },
-  "description": "quest.kill_phantom_5.desc",
+  "description": "Kill 5 Phantom",
   "quest_type": {
     "muffins_questlib:kill_entity": [
       {
