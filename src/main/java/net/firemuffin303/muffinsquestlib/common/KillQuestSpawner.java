@@ -1,0 +1,143 @@
+package net.firemuffin303.muffinsquestlib.common;
+
+import com.mojang.logging.LogUtils;
+import net.fabricmc.loader.impl.util.log.Log;
+import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
+import net.firemuffin303.muffinsquestlib.common.quest.data.KillEntityQuestData;
+import net.firemuffin303.muffinsquestlib.common.quest.data.QuestData;
+import net.firemuffin303.muffinsquestlib.common.registry.ModQuestTypes;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.*;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.world.SpawnHelper;
+import net.minecraft.world.spawner.Spawner;
+
+import java.util.List;
+
+public class KillQuestSpawner implements Spawner {
+    private int cooldown;
+
+    public KillQuestSpawner(){
+
+    }
+
+    @Override
+    public int spawn(ServerWorld world, boolean spawnMonsters, boolean spawnAnimals) {
+        if(!spawnMonsters) {
+            return 0;
+        } else if (!world.getGameRules().getBoolean(MuffinsQuestLib.DO_QUEST_TARGET_ENTITY_SPAWN)) {
+            return 0;
+        } else{
+            Random random = world.random;
+            --this.cooldown;
+            if(this.cooldown > 0){
+                return 0;
+            }else{
+                this.cooldown += 600 + random.nextInt(600);
+                int i = world.getPlayers().size();
+                //If there's no player on the server, cancel spawn
+                if (i < 1) {
+                    return 0;
+                }
+
+                List<ServerPlayerEntity> playerEntities = world.getPlayers(serverPlayerEntity -> {
+                    PlayerQuestData playerQuestData = ((PlayerQuestData.PlayerQuestDataAccessor)serverPlayerEntity).questLib$getData();
+                    return  playerQuestData.getQuestInstance() != null && playerQuestData.getQuestInstance().getQuest().hasQuestType(ModQuestTypes.KILL_ENTITY_DATA) && !serverPlayerEntity.isSpectator();
+                });
+
+                if(playerEntities.isEmpty()){
+                    return 0;
+                }
+
+                for (ServerPlayerEntity serverPlayerEntity : playerEntities){
+                    //We don't want mob to spawn near villages or workstation. so we cancel if there's any POI block nearby.
+                    if(world.isNearOccupiedPointOfInterest(serverPlayerEntity.getBlockPos(),2)){
+                        return 0;
+                    }
+
+                    PlayerQuestData playerQuestData = ((PlayerQuestData.PlayerQuestDataAccessor)serverPlayerEntity).questLib$getData();
+                    List<QuestData> data = playerQuestData.getQuestInstance().getQuestData(ModQuestTypes.KILL_ENTITY_DATA);
+
+                    int amount = 0;
+                    for (QuestData questData : data){
+                        if(questData instanceof KillEntityQuestData killEntityQuestData){
+                            amount++;
+                            int randomX = (12 + random.nextInt(8)) * (random.nextBoolean() ? -1 : 1);
+                            int randomZ = (12 + random.nextInt(8)) * (random.nextBoolean() ? -1 : 1);
+                            BlockPos.Mutable mutable = serverPlayerEntity.getBlockPos().mutableCopy().move(randomX, 0, randomZ);
+                            if (!world.isRegionLoaded(mutable.getX() - 10, mutable.getZ() - 10, mutable.getX() + 10, mutable.getZ() + 10)) {
+                                return 0;
+                            }
+
+                            if(!this.spawnEntity(world,mutable,serverPlayerEntity,killEntityQuestData)){
+                                return 0;
+                            }
+
+                            return amount;
+                        }
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+
+    public boolean spawnEntity(ServerWorld world,BlockPos blockPos,ServerPlayerEntity serverPlayerEntity,KillEntityQuestData killEntityQuestData){
+        EntityType<?> entityType = killEntityQuestData.getEntityRequirements().entityType();
+        int questAmount = killEntityQuestData.getRequirementAmount();
+        BlockState blockState = world.getBlockState(blockPos);
+        LogUtils.getLogger().info(blockPos.toString());
+        int yCheck = 0;
+        blockPos = blockPos.up(10);
+        boolean bl = false;
+        do{
+            bl = SpawnHelper.canSpawn(SpawnRestriction.Location.ON_GROUND,world,blockPos,entityType);
+            LogUtils.getLogger().info(blockPos.toString());
+
+            if(bl){
+                Entity entity = entityType.create(world);
+                if(entity != null){
+                    entity.setPosition(blockPos.toCenterPos());
+                    if(entity instanceof MobEntity mobEntity){
+                        world.playSound(null,blockPos, SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.NEUTRAL,5.0f,1.0f);
+                        Random random = world.random;
+                        for(int i = 0; i < 50; i++){
+                            float ak = world.random.nextFloat() * 4.0F;
+                            float ao = random.nextFloat() * 6.2831855F;
+                            double f = (double)(MathHelper.cos(ao) * ak);
+                            double y = 0.01 + random.nextDouble() * 0.5;
+                            double z = (double)(MathHelper.sin(ao) * ak);
+
+                            world.addParticle(ParticleTypes.CLOUD, blockPos.getX() + f * 0.1, blockPos.getY() + 0.3, blockPos.getZ() + z * 0.1,f,y,z);
+                        }
+                        mobEntity.setTarget(serverPlayerEntity);
+                        mobEntity.initialize(world,world.getLocalDifficulty(blockPos), SpawnReason.REINFORCEMENT,null,null);
+                        mobEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING,600,0));
+                    }
+
+                    world.spawnEntityAndPassengers(entity);
+                    return true;
+                }
+            }
+
+            blockPos = blockPos.down();
+            yCheck += 1;
+        }while(yCheck <= 20);
+        return false;
+    }
+
+}
+
+
+
+

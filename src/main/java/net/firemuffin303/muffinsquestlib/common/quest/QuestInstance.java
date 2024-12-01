@@ -1,37 +1,42 @@
 package net.firemuffin303.muffinsquestlib.common.quest;
 
+import com.google.common.collect.Maps;
+import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
-import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
 import net.firemuffin303.muffinsquestlib.common.quest.data.QuestData;
 import net.firemuffin303.muffinsquestlib.common.registry.ModRegistries;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class QuestInstance {
     private Quest quest;
-    private Map<QuestType<?>,List<Integer>> progress = new HashMap<>();
+    private Map<QuestType<?>,List<Integer>> progress = Maps.newHashMap();
     private State state = State.PROGRESSING;
     public int time;
 
     public static final Codec<Map<QuestType<?>,List<Integer>>> PROGRESS_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.unboundedMap(ModRegistries.QUEST_TYPE_REGISTRY.getCodec(),Codec.INT.listOf()).fieldOf("progress").forGetter(questTypeListMap -> questTypeListMap)
-    ).apply(instance,Map::copyOf));
+    ).apply(instance,questTypeListMap -> {
+        //Codec always return ImmutableMap and ImmutableList. So we need to remake Map and List to be mutable.
+        Map<QuestType<?>,List<Integer>> progress = Maps.newHashMap();
+        questTypeListMap.forEach((questType, list) -> {
+            List<Integer> newList = new ArrayList<>();
+            newList.addAll(list);
+            progress.put(questType,newList);
+        });
+        return progress;
+    }));
 
     public QuestInstance(Quest quest,int time){
         this.quest = quest;
@@ -50,21 +55,19 @@ public class QuestInstance {
         return time;
     }
 
-    public Map<QuestType<?>,List<Integer>> setProgressCodec(Map<QuestType<?>, List<Integer>> progress) {
-        this.progress = progress;
-        return this.progress;
-    }
 
     public void setProgress(Map<QuestType<?>, List<Integer>> progress) {
         this.progress = progress;
     }
 
     public List<Integer> getProgressType(QuestType<?> questType) {
-        this.progress.computeIfAbsent(questType,questType1 -> {
+        if(this.progress.get(questType) == null){
             List<Integer> list = new ArrayList<>();
-            this.getQuest().questTypes.get(questType).forEach(quest -> list.add(0));
-            return list;
-        });
+            for(QuestData questData : this.getQuest().getQuestType(questType)) {
+                list.add(0);
+            }
+            this.progress.put(questType,list);
+        }
         return this.progress.get(questType);
     }
 

@@ -2,6 +2,8 @@ package net.firemuffin303.muffinsquestlib;
 
 import com.mojang.logging.LogUtils;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -25,15 +27,14 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TradeOffers;
+import net.minecraft.world.GameRules;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
-import java.lang.ref.Reference;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 public class MuffinsQuestLib implements ModInitializer {
+    public static final GameRules.Key<GameRules.BooleanRule> DO_QUEST_TARGET_ENTITY_SPAWN  = GameRuleRegistry.register("muffins_questlib:doQuestTargetEntitySpawn", GameRules.Category.SPAWNING,GameRuleFactory.createBooleanRule(true));
 
     public static final String MOD_ID = "muffins_questlib";
     public static final Logger LOGGER = LogUtils.getLogger();
@@ -80,6 +81,7 @@ public class MuffinsQuestLib implements ModInitializer {
 
             factories.add(new QuestTradeOffer(16,1,1,1));
         });
+
     }
 
     public static Identifier modId(String id){
