@@ -31,6 +31,7 @@ public class PlayerQuestData {
                     this.questInstance.time--;
                 }
             } else if (this.questInstance.getState() == QuestInstance.State.SUCCESS && this.player instanceof ServerPlayerEntity serverPlayerEntity) {
+                this.questInstance.getQuest().questTypes.forEach((questType, questData) -> questData.forEach(questData1 -> questData1.onQuestDone(this.player)));
                 this.questInstance.getRewards().forEach(itemStack -> {
                     if(!serverPlayerEntity.giveItemStack(itemStack.copy())){
                         serverPlayerEntity.dropStack(itemStack.copy());

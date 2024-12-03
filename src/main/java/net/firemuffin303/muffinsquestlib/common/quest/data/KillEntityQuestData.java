@@ -8,6 +8,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registries;
@@ -44,6 +45,11 @@ public record KillEntityQuestData(EntityRequirementEntry entityRequirementEntry)
     @Override
     public QuestType<?> getType() {
         return ModQuestTypes.KILL_ENTITY_DATA;
+    }
+
+    @Override
+    public void onQuestDone(PlayerEntity player) {
+
     }
 
     @Override
