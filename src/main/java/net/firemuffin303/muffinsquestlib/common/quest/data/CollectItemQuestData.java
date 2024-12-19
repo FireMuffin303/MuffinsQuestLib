@@ -85,6 +85,11 @@ public record CollectItemQuestData(ItemStack itemStack) implements QuestData{
     }
 
     @Override
+    public void onQuestFailed(PlayerEntity player) {
+
+    }
+
+    @Override
     public <T extends QuestData> Codec<T> getCodec() {
         return null;
     }

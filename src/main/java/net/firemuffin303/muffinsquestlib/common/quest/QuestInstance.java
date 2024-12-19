@@ -5,14 +5,19 @@ import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
+import net.firemuffin303.muffinsquestlib.common.network.UpdateQuestInstancePacket;
 import net.firemuffin303.muffinsquestlib.common.quest.data.QuestData;
 import net.firemuffin303.muffinsquestlib.common.registry.ModRegistries;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtHelper;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
@@ -22,6 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class QuestInstance {
     private Quest quest;
     private Map<QuestType<?>,List<Integer>> progress = Maps.newHashMap();
+    private List<UUID> questEntitiesUUID = new ArrayList<>();
     private State state = State.PROGRESSING;
     public int time;
 
@@ -55,6 +61,7 @@ public class QuestInstance {
         return time;
     }
 
+    //--- Progresses ---
 
     public void setProgress(Map<QuestType<?>, List<Integer>> progress) {
         this.progress = progress;
@@ -100,6 +107,8 @@ public class QuestInstance {
         this.setState(this.quest.questTypes.size() == k.get() ? State.SUCCESS : State.PROGRESSING);
     }
 
+    //--- Quest State ---
+
     public void setState(State state) {
         this.state = state;
     }
@@ -108,8 +117,25 @@ public class QuestInstance {
         return state;
     }
 
+    //--- Rewards ---
+
     public List<ItemStack> getRewards() {
         return quest.definition.rewards();
+    }
+
+    //--- Quest Entities ---
+    public void addQuestEntity(UUID uuid, ServerPlayerEntity serverPlayerEntity){
+        this.questEntitiesUUID.add(uuid);
+        ServerPlayNetworking.send(serverPlayerEntity,new UpdateQuestInstancePacket(this));
+    }
+
+    public void removeQuestEntity(UUID uuid,ServerPlayerEntity serverPlayerEntity){
+        this.questEntitiesUUID.remove(uuid);
+        ServerPlayNetworking.send(serverPlayerEntity,new UpdateQuestInstancePacket(this));
+    }
+
+    public List<UUID> getQuestEntitiesUUID(){
+        return this.questEntitiesUUID;
     }
 
     //NBT
@@ -125,7 +151,20 @@ public class QuestInstance {
                 .resultOrPartial(MuffinsQuestLib.LOGGER::error).ifPresent(nbtElement -> questInstance.put("Progress",nbtElement));
         questInstance.putString("State",this.state.name());
         questInstance.putInt("Time",this.time);
+
+        NbtList questEntities = new NbtList();
+        for(int i = 0 ; i < this.questEntitiesUUID.size(); i++){
+            questEntities.add(i, NbtHelper.fromUuid(this.questEntitiesUUID.get(i)));
+        }
+
+        questInstance.put("QuestEntities",questEntities);
+
         nbtCompound.put("QuestInstance",questInstance);
+
+
+
+
+
     }
 
     public static QuestInstance readNbt(PlayerEntity player,NbtCompound nbtCompound){
@@ -141,6 +180,13 @@ public class QuestInstance {
         PROGRESS_CODEC.parse(new Dynamic<>(NbtOps.INSTANCE,questInstanceNBT.get("Progress")))
                 .resultOrPartial(MuffinsQuestLib.LOGGER::error).ifPresent(questInstance::setProgress);
 
+        NbtList questEntitiesNBT = questInstanceNBT.getList("QuestEntities",11);
+        List<UUID> questEntities = new ArrayList<>();
+        for(int i = 0;i < questEntitiesNBT.size();i++){
+            questEntities.add(NbtHelper.toUuid(questEntitiesNBT.get(i)));
+        }
+
+        questInstance.questEntitiesUUID = questEntities;
 
         return questInstance;
     }
@@ -155,6 +201,7 @@ public class QuestInstance {
                 (valueBuf,list) -> valueBuf.writeCollection(list,PacketByteBuf::writeInt));
         packetByteBuf.writeEnumConstant(this.state);
         packetByteBuf.writeInt(this.time);
+        packetByteBuf.writeCollection(this.questEntitiesUUID, PacketByteBuf::writeUuid);
     }
 
     public static QuestInstance fromPacket(PacketByteBuf packetByteBuf) {
@@ -164,11 +211,14 @@ public class QuestInstance {
                 valueBuf -> valueBuf.readCollection(ArrayList<Integer>::new,PacketByteBuf::readInt));
         State state = packetByteBuf.readEnumConstant(State.class);
         int time = packetByteBuf.readInt();
+        List<UUID> questEntities = packetByteBuf.readCollection(ArrayList::new,PacketByteBuf::readUuid);
 
         QuestInstance questInstance = new QuestInstance(quest,time);
 
         questInstance.setState(state);
         questInstance.setProgress(map);
+        questInstance.questEntitiesUUID = questEntities;
+
         return questInstance;
     }
 

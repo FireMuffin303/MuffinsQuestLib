@@ -4,11 +4,15 @@
   "package": "net.firemuffin303.muffinsquestlib.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "BucketableMixin",
     "InventoryChangedCriterionMixin",
+    "MobEntityMixin",
     "PlayerEntityMixin",
     "ServerWorldMixin"
   ],
   "client": [
+    "MinecraftClientMixin",
+    "questEntity.EntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

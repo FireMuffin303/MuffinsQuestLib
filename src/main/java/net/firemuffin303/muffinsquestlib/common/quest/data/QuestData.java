@@ -32,4 +32,6 @@ public interface QuestData {
     QuestType<?> getType();
 
     void onQuestDone(PlayerEntity player);
+
+    void onQuestFailed(PlayerEntity player);
 }

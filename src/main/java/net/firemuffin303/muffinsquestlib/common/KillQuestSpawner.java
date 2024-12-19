@@ -3,9 +3,11 @@ package net.firemuffin303.muffinsquestlib.common;
 import com.mojang.logging.LogUtils;
 import net.fabricmc.loader.impl.util.log.Log;
 import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
+import net.firemuffin303.muffinsquestlib.common.quest.QuestInstance;
 import net.firemuffin303.muffinsquestlib.common.quest.data.KillEntityQuestData;
 import net.firemuffin303.muffinsquestlib.common.quest.data.QuestData;
 import net.firemuffin303.muffinsquestlib.common.registry.ModQuestTypes;
+import net.firemuffin303.muffinsquestlib.common.registry.ModTags;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -23,6 +25,7 @@ import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.spawner.Spawner;
 
 import java.util.List;
+import java.util.Objects;
 
 public class KillQuestSpawner implements Spawner {
     private int cooldown;
@@ -93,17 +96,21 @@ public class KillQuestSpawner implements Spawner {
     }
 
     public boolean spawnEntity(ServerWorld world,BlockPos blockPos,ServerPlayerEntity serverPlayerEntity,KillEntityQuestData killEntityQuestData){
+        QuestInstance questInstance = ((PlayerQuestData.PlayerQuestDataAccessor)serverPlayerEntity).questLib$getData().getQuestInstance();
+        Objects.requireNonNull(questInstance);
         EntityType<?> entityType = killEntityQuestData.getEntityRequirements().entityType();
         int questAmount = killEntityQuestData.getRequirementAmount();
         BlockState blockState = world.getBlockState(blockPos);
-        LogUtils.getLogger().info(blockPos.toString());
         int yCheck = 0;
         blockPos = blockPos.up(10);
         boolean bl = false;
+
+        if(entityType.isIn(ModTags.QUEST_SPAWN_BLACKLIST)){
+            return false;
+        }
+
         do{
             bl = SpawnHelper.canSpawn(SpawnRestriction.Location.ON_GROUND,world,blockPos,entityType);
-            LogUtils.getLogger().info(blockPos.toString());
-
             if(bl){
                 Entity entity = entityType.create(world);
                 if(entity != null){
@@ -122,10 +129,21 @@ public class KillQuestSpawner implements Spawner {
                         }
                         mobEntity.setTarget(serverPlayerEntity);
                         mobEntity.initialize(world,world.getLocalDifficulty(blockPos), SpawnReason.REINFORCEMENT,null,null);
-                        mobEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING,600,0));
+
+
+
+                        questInstance.addQuestEntity(mobEntity.getUuid(),serverPlayerEntity);
                     }
 
                     world.spawnEntityAndPassengers(entity);
+
+                    if(entity instanceof QuestEntityData.QuestEntityDataAccessor questEntityDataAccessor){
+                        QuestEntityData questEntityData = questEntityDataAccessor.getQuestEntityData();
+                        questEntityData.setQuestMarked(true);
+                        questEntityData.setPlayerUUID(serverPlayerEntity.getUuid());
+                        questEntityData.updatePacket();
+                    }
+
                     return true;
                 }
             }

@@ -22,6 +22,7 @@ public class PlayerQuestData {
         if(this.questInstance != null){
             if(this.questInstance.getState() == QuestInstance.State.FAIL){
                 if(this.player instanceof ServerPlayerEntity serverPlayerEntity){
+                    this.questInstance.getQuest().questTypes.forEach((questType, questData) -> questData.forEach(questData1 -> questData1.onQuestFailed(this.player)));
                     this.clearQuest(serverPlayerEntity);
                 }
             }else if(this.questInstance.getState() == QuestInstance.State.PROGRESSING){

@@ -21,6 +21,8 @@ public class ModQuests {
     public static final RegistryKey<Quest> KILL_PHANTOM_5 = register("kill_phantom_5");
     public static final RegistryKey<Quest> COLLECT_PLANKS_32 = register("collect_planks_32");
     public static final RegistryKey<Quest> BLAZE_KILLER_1 = register("blaze_killer_1");
+    public static final RegistryKey<Quest> WARDEN_SPAWN_TEST = register("warden_spawn_test");
+    public static final RegistryKey<Quest> AXOLOTL_BUCKET_TEST = register("axolotl_bucket_test");
 
     public static void init(){}
 
@@ -74,5 +76,13 @@ public class ModQuests {
         )
                 .addQuest(ModQuestTypes.KILL_ENTITY_DATA,new KillEntityQuestData(new KillEntityQuestData.EntityRequirementEntry(EntityType.BLAZE,5)))
                 .addQuest(ModQuestTypes.COLLECT_ITEM_DATA,new CollectItemQuestData(new ItemStack(Items.BLAZE_ROD,3))));
+
+        questRegisterable.register(WARDEN_SPAWN_TEST,new Quest(
+           new Quest.Definition(List.of(new ItemStack(Items.ECHO_SHARD,16)),20),"This only for check spawn testing"
+        ).addQuest(ModQuestTypes.KILL_ENTITY_DATA,new KillEntityQuestData(new KillEntityQuestData.EntityRequirementEntry(EntityType.WARDEN,1))));
+
+        questRegisterable.register(AXOLOTL_BUCKET_TEST,new Quest(
+                new Quest.Definition(List.of(new ItemStack(Items.ECHO_SHARD,16)),20),"This only for check spawn testing"
+        ).addQuest(ModQuestTypes.KILL_ENTITY_DATA,new KillEntityQuestData(new KillEntityQuestData.EntityRequirementEntry(EntityType.AXOLOTL,1))));
     }
 }
