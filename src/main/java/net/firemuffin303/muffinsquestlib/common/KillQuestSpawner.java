@@ -62,37 +62,38 @@ public class KillQuestSpawner implements Spawner {
                     return 0;
                 }
 
+                int mobSpawned = 0;
+
                 for (ServerPlayerEntity serverPlayerEntity : playerEntities){
+                    LogUtils.getLogger().info(serverPlayerEntity.getDisplayName().getString());
+
                     //We don't want mob to spawn near villages or workstation. so we cancel if there's any POI block nearby.
-                    if(world.isNearOccupiedPointOfInterest(serverPlayerEntity.getBlockPos(),2)){
-                        return 0;
-                    }
+                    if(!world.isNearOccupiedPointOfInterest(serverPlayerEntity.getBlockPos(),2)){
 
-                    PlayerQuestData playerQuestData = ((PlayerQuestData.PlayerQuestDataAccessor)serverPlayerEntity).questLib$getData();
-                    List<QuestData> data = playerQuestData.getQuestInstance().getQuestData(ModQuestTypes.KILL_ENTITY_DATA);
+                        PlayerQuestData playerQuestData = ((PlayerQuestData.PlayerQuestDataAccessor)serverPlayerEntity).questLib$getData();
+                        List<QuestData> data = playerQuestData.getQuestInstance().getQuestData(ModQuestTypes.KILL_ENTITY_DATA);
 
-                    int amount = 0;
-                    for (QuestData questData : data){
-                        if(questData instanceof KillEntityQuestData killEntityQuestData){
-                            amount++;
-                            int randomX = (12 + random.nextInt(8)) * (random.nextBoolean() ? -1 : 1);
-                            int randomZ = (12 + random.nextInt(8)) * (random.nextBoolean() ? -1 : 1);
-                            BlockPos.Mutable mutable = serverPlayerEntity.getBlockPos().mutableCopy().move(randomX, 0, randomZ);
-                            if (!world.isRegionLoaded(mutable.getX() - 10, mutable.getZ() - 10, mutable.getX() + 10, mutable.getZ() + 10)) {
-                                return 0;
+                        for (QuestData questData : data){
+                            if(questData instanceof KillEntityQuestData killEntityQuestData){
+                                int randomX = (12 + random.nextInt(8)) * (random.nextBoolean() ? -1 : 1);
+                                int randomZ = (12 + random.nextInt(8)) * (random.nextBoolean() ? -1 : 1);
+                                BlockPos.Mutable mutable = serverPlayerEntity.getBlockPos().mutableCopy().move(randomX, 0, randomZ);
+
+                                //Check if chunk loaded
+                                if (world.isRegionLoaded(mutable.getX() - 10, mutable.getZ() - 10, mutable.getX() + 10, mutable.getZ() + 10)) {
+                                    if(this.spawnEntity(world,mutable,serverPlayerEntity,killEntityQuestData)){
+                                        mobSpawned++;
+                                    }
+                                }
                             }
-
-                            if(!this.spawnEntity(world,mutable,serverPlayerEntity,killEntityQuestData)){
-                                return 0;
-                            }
-
-                            return amount;
                         }
                     }
+
                 }
+
+                return mobSpawned;
             }
         }
-        return 0;
     }
 
     public boolean spawnEntity(ServerWorld world,BlockPos blockPos,ServerPlayerEntity serverPlayerEntity,KillEntityQuestData killEntityQuestData){
@@ -118,31 +119,28 @@ public class KillQuestSpawner implements Spawner {
                     if(entity instanceof MobEntity mobEntity){
                         world.playSound(null,blockPos, SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.NEUTRAL,5.0f,1.0f);
                         Random random = world.random;
-                        for(int i = 0; i < 50; i++){
-                            float ak = world.random.nextFloat() * 4.0F;
-                            float ao = random.nextFloat() * 6.2831855F;
-                            double f = (double)(MathHelper.cos(ao) * ak);
-                            double y = 0.01 + random.nextDouble() * 0.5;
-                            double z = (double)(MathHelper.sin(ao) * ak);
+                        float ak = world.random.nextFloat() * 4.0F;
+                        float ao = random.nextFloat() * 6.2831855F;
+                        double f = (double)(MathHelper.cos(ao) * ak);
+                        double y = 0.01 + random.nextDouble() * 0.5;
+                        double z = (double)(MathHelper.sin(ao) * ak);
+                        world.spawnParticles(ParticleTypes.CLOUD, blockPos.getX() + f * 0.1, blockPos.getY() + 0.3, blockPos.getZ() + z * 0.1,20,f,y,z,2);
 
-                            world.addParticle(ParticleTypes.CLOUD, blockPos.getX() + f * 0.1, blockPos.getY() + 0.3, blockPos.getZ() + z * 0.1,f,y,z);
-                        }
                         mobEntity.setTarget(serverPlayerEntity);
                         mobEntity.initialize(world,world.getLocalDifficulty(blockPos), SpawnReason.REINFORCEMENT,null,null);
 
-
+                        if(mobEntity instanceof QuestEntityData.QuestEntityDataAccessor questEntityDataAccessor){
+                            QuestEntityData questEntityData = questEntityDataAccessor.getQuestEntityData();
+                            questEntityData.setQuestMarked(true);
+                            questEntityData.setPlayerUUID(serverPlayerEntity.getUuid());
+                        }
 
                         questInstance.addQuestEntity(mobEntity.getUuid(),serverPlayerEntity);
                     }
 
                     world.spawnEntityAndPassengers(entity);
 
-                    if(entity instanceof QuestEntityData.QuestEntityDataAccessor questEntityDataAccessor){
-                        QuestEntityData questEntityData = questEntityDataAccessor.getQuestEntityData();
-                        questEntityData.setQuestMarked(true);
-                        questEntityData.setPlayerUUID(serverPlayerEntity.getUuid());
-                        questEntityData.updatePacket();
-                    }
+
 
                     return true;
                 }

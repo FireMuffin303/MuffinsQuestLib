@@ -2,11 +2,13 @@ package net.firemuffin303.muffinsquestlib.common;
 
 import com.mojang.logging.LogUtils;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.loader.impl.util.log.Log;
 import net.firemuffin303.muffinsquestlib.common.network.QuestEntityPacket;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 
 import java.util.UUID;
 
@@ -21,9 +23,6 @@ public class QuestEntityData {
 
     public void setQuestMarked(boolean questMarked) {
         this.questMarked = questMarked;
-        if(!this.mob.getWorld().isClient){
-
-        }
     }
 
     public void setPlayerUUID(UUID playerUUID) {
@@ -42,15 +41,25 @@ public class QuestEntityData {
         return mob;
     }
 
-    public void updatePacket(){
+    //I'll find a way to optimise data sync later
+    public void tick(){
+        if(this.mob.age % 5 == 0 && !this.mob.getWorld().isClient){
+            ServerWorld serverWorld = (ServerWorld) this.mob.getWorld();
+            for(ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers()){
+                if(serverPlayerEntity.isInRange(this.mob,64)){
+                    ServerPlayNetworking.send(serverPlayerEntity,new QuestEntityPacket(this.mob,this.playerUUID,this.questMarked));
+                }
+            }
+        }
+    }
+
+    public void updatePacket(ServerPlayerEntity serverPlayerEntity){
         if(this.playerUUID != null && !this.mob.getWorld().isClient){
-            ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) this.mob.getWorld().getPlayerByUuid(this.playerUUID);
             if(serverPlayerEntity == null){
                 return;
             }
             ServerPlayNetworking.send(serverPlayerEntity,new QuestEntityPacket(this.mob,this.playerUUID,this.questMarked));
         }
-
     }
 
     //NBT
@@ -71,6 +80,7 @@ public class QuestEntityData {
             this.playerUUID = questEntityCompound.getUuid("PlayerUUID");
         }
         this.questMarked = questEntityCompound.getBoolean("QuestMarked");
+
 
     }
 

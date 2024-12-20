@@ -14,6 +14,7 @@ import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
+import net.minecraft.client.util.DefaultSkinHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
@@ -34,8 +35,6 @@ public abstract class EntityRendererMixin<T extends Entity> {
     @Shadow @Final protected EntityRenderDispatcher dispatcher;
 
     @Unique private final Identifier QUEST_ICON = new Identifier(MuffinsQuestLib.MOD_ID,"textures/item/quest_paper.png");
-
-
 
     @Inject(method = "render", at = @At(value = "HEAD"))
     public void questLib$showQuestIcon(T entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci){
@@ -68,9 +67,7 @@ public abstract class EntityRendererMixin<T extends Entity> {
         ClientPlayNetworkHandler clientPlayNetworkHandler = MinecraftClient.getInstance().getNetworkHandler();
         if(clientPlayNetworkHandler != null){
             PlayerListEntry playerListEntry = clientPlayNetworkHandler.getPlayerListEntry(accessor.getQuestEntityData().getPlayerUUID());
-            Objects.requireNonNull(playerListEntry,"Quest Lib : Entity Renderer Mixin, PlayerListEntry should not be null");
-
-            VertexConsumer playerIcon = vertexConsumers.getBuffer(RenderLayer.getItemEntityTranslucentCull(playerListEntry.getSkinTexture()));
+            VertexConsumer playerIcon = vertexConsumers.getBuffer(RenderLayer.getItemEntityTranslucentCull(playerListEntry == null ? DefaultSkinHelper.getTexture() : playerListEntry.getSkinTexture()));
             Matrix4f matrix4f2 = matrices.peek().getPositionMatrix();
             Matrix3f matrix3f2 = matrices.peek().getNormalMatrix();
             vertex(playerIcon,matrix4f2,0.25f,2.25f,-2.25f,-0.25f,0.01f,matrix3f2,0.125f,0.25f);

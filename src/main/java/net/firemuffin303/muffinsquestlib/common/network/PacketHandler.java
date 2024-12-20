@@ -12,6 +12,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class PacketHandler {
 
@@ -34,9 +35,8 @@ public class PacketHandler {
         ClientWorld clientWorld = MinecraftClient.getInstance().world;
         Objects.requireNonNull(clientWorld);
         Entity entity = clientWorld.getEntityById(questEntityPacket.mobId);
-        LogUtils.getLogger().info(questEntityPacket.mobId + "");
         if(entity instanceof QuestEntityData.QuestEntityDataAccessor accessor){
-            accessor.getQuestEntityData().setPlayerUUID(questEntityPacket.player);
+            accessor.getQuestEntityData().setPlayerUUID(questEntityPacket.player.equals(new UUID(0,0)) ? null : questEntityPacket.player);
             accessor.getQuestEntityData().setQuestMarked(questEntityPacket.questMarked);
         }
     }

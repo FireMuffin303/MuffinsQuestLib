@@ -1,5 +1,6 @@
 package net.firemuffin303.muffinsquestlib.common.quest.data;
 
+import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.firemuffin303.muffinsquestlib.common.PlayerQuestData;
@@ -22,6 +23,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public record KillEntityQuestData(EntityRequirementEntry entityRequirementEntry) implements QuestData {
@@ -97,19 +100,12 @@ public record KillEntityQuestData(EntityRequirementEntry entityRequirementEntry)
         ServerWorld serverWorld = (ServerWorld) player.getWorld();
         QuestInstance questInstance = ((PlayerQuestData.PlayerQuestDataAccessor)player).questLib$getData().getQuestInstance();
         if(questInstance != null && !questInstance.getQuestEntitiesUUID().isEmpty()){
-            for(UUID uuid:questInstance.getQuestEntitiesUUID()){
+            //We make lists here as a cache to prevent ConcurrentModification Error.
+            List<UUID> uuids = new ArrayList<>(questInstance.getQuestEntitiesUUID());
+
+            for(UUID uuid: uuids){
                 Entity entity = serverWorld.getEntity(uuid);
                 if(entity != null && entity.getType() == this.getEntityRequirements().entityType()){
-                    for(int i = 0; i < 20; i++){
-                        float ak = serverWorld.random.nextFloat() * 4.0F;
-                        float ao = serverWorld.random.nextFloat() * 6.2831855F;
-                        double f = MathHelper.cos(ao) * ak;
-                        double y = 0.01 + serverWorld.random.nextDouble() * 0.5;
-                        double z = MathHelper.sin(ao) * ak;
-
-                        serverWorld.addParticle(ParticleTypes.CLOUD, entity.getX() + f * 0.1, entity.getY() + 0.3, entity.getZ() + z * 0.1,f,y,z);
-                    }
-
                     entity.discard();
                 }
             }

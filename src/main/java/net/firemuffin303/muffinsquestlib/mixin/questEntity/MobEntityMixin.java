@@ -1,4 +1,4 @@
-package net.firemuffin303.muffinsquestlib.mixin;
+package net.firemuffin303.muffinsquestlib.mixin.questEntity;
 
 import net.firemuffin303.muffinsquestlib.common.QuestEntityData;
 import net.minecraft.entity.Entity;
@@ -40,9 +40,11 @@ public abstract class MobEntityMixin extends LivingEntity implements QuestEntity
                 if(entity != null){
                     double d = entity.squaredDistanceTo(this);
                     double j = 48 * 48;
-                    if (d > (double)j) {
+                    if (d > j) {
                         this.discard();
                     }
+                }else{
+                    this.discard();
                 }
             }
             ci.cancel();
@@ -55,6 +57,11 @@ public abstract class MobEntityMixin extends LivingEntity implements QuestEntity
             return false;
         }
         return super.canUsePortals();
+    }
+
+    @Inject(method = "tick",at = @At("TAIL"))
+    public void questLib$tick(CallbackInfo ci){
+        this.questEntityData.tick();
     }
 
     @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))

@@ -13,6 +13,7 @@ import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
+import net.firemuffin303.muffinsquestlib.common.ModServerEventHandler;
 import net.firemuffin303.muffinsquestlib.common.PlayerQuestData;
 import net.firemuffin303.muffinsquestlib.common.QuestEntityData;
 import net.firemuffin303.muffinsquestlib.common.command.ModCommands;
@@ -69,6 +70,8 @@ public class MuffinsQuestLib implements ModInitializer {
         ModQuests.init();
         ModItems.init();
 
+        ModServerEventHandler.init();
+
         ServerPlayNetworking.registerGlobalReceiver(MuffinsQuestLib.modId("clear_quest_c2s"),(minecraftServer, serverPlayerEntity, serverPlayNetworkHandler, packetByteBuf, packetSender) -> {
             if(((PlayerQuestData.PlayerQuestDataAccessor)serverPlayerEntity).questLib$getData().getQuestInstance() != null){
                 minecraftServer.execute(() -> ((PlayerQuestData.PlayerQuestDataAccessor)serverPlayerEntity).questLib$getData().getQuestInstance().setState(QuestInstance.State.FAIL));
@@ -76,78 +79,10 @@ public class MuffinsQuestLib implements ModInitializer {
             }
         });
 
-        ServerPlayConnectionEvents.JOIN.register((serverPlayNetworkHandler, packetSender, minecraftServer) -> {
-            if(((PlayerQuestData.PlayerQuestDataAccessor)serverPlayNetworkHandler.player).questLib$getData().hasQuest()){
-                minecraftServer.execute(() ->{
-                    ServerPlayNetworking.send(serverPlayNetworkHandler.player,
-                            new UpdateQuestInstancePacket(((PlayerQuestData.PlayerQuestDataAccessor)serverPlayNetworkHandler.player).questLib$getData().getQuestInstance()));
-                });
-            }
-
-        });
 
         TradeOfferHelper.registerWanderingTraderOffers(1,factories -> {
             factories.add(new QuestTradeOffer(16,1,1,1));
         });
-
-
-        ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register((serverWorld, killerEntity, killedEntity) -> {
-            if(killerEntity instanceof ServerPlayerEntity player){
-                onPlayerKill(serverWorld,player,killedEntity);
-            }
-        });
-
-        ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((serverPlayerEntity, fromWorld, toWorld) -> {
-            QuestInstance questInstance = ((PlayerQuestData.PlayerQuestDataAccessor)serverPlayerEntity).questLib$getData().getQuestInstance();
-            if(questInstance != null){
-                questInstance.getQuestEntitiesUUID().removeIf(uuid -> {
-                    Entity entity = fromWorld.getEntity(uuid);
-                    if(entity != null){
-                        entity.discard();
-                        return true;
-                    }
-                    return false;
-                });
-
-                ServerPlayNetworking.send(serverPlayerEntity,new UpdateQuestInstancePacket(questInstance));
-            }
-        });
-
-        ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
-            QuestInstance questInstance = ((PlayerQuestData.PlayerQuestDataAccessor)oldPlayer).questLib$getData().getQuestInstance();
-            ((PlayerQuestData.PlayerQuestDataAccessor)newPlayer).questLib$getData().setQuestInstance(questInstance);
-        });
-
-        ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {
-            QuestInstance questInstance = ((PlayerQuestData.PlayerQuestDataAccessor)oldPlayer).questLib$getData().getQuestInstance();
-            ServerPlayNetworking.send(newPlayer,new UpdateQuestInstancePacket(questInstance));
-        });
-
-
-        //Remove Player Quest Entity UUID
-        ServerLivingEntityEvents.AFTER_DEATH.register((livingEntity, damageSource) -> {
-            if(livingEntity instanceof QuestEntityData.QuestEntityDataAccessor questEntityDataAccessor){
-                QuestEntityData questEntityData = questEntityDataAccessor.getQuestEntityData();
-                if(questEntityData.isQuestMarked() && questEntityData.getPlayerUUID() != null){
-                    ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) livingEntity.getWorld().getPlayerByUuid(questEntityData.getPlayerUUID());
-                    if(serverPlayerEntity != null){
-                        QuestInstance questInstance = ((PlayerQuestData.PlayerQuestDataAccessor)serverPlayerEntity).questLib$getData().getQuestInstance();
-                        if(questInstance != null && questInstance.getQuestEntitiesUUID().contains(livingEntity.getUuid())){
-                            questInstance.removeQuestEntity(livingEntity.getUuid(),serverPlayerEntity);
-                        }
-                    }
-                }
-            }
-        });
-        ServerEntityEvents.ENTITY_LOAD.register((entity, serverWorld) -> {
-            if(entity instanceof QuestEntityData.QuestEntityDataAccessor accessor){
-                if(accessor.getQuestEntityData().isQuestMarked()){
-                    accessor.getQuestEntityData().updatePacket();
-                    LogUtils.getLogger().info("loaded");
-                }
-            }
-        });
-
     }
 
 
@@ -167,6 +102,8 @@ public class MuffinsQuestLib implements ModInitializer {
             }
         }
     }
+
+
 
 
     public static class QuestTradeOffer implements TradeOffers.Factory{

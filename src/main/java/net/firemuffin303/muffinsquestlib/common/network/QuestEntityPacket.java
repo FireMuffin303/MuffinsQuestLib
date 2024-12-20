@@ -3,9 +3,9 @@ package net.firemuffin303.muffinsquestlib.common.network;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
-import net.firemuffin303.muffinsquestlib.common.QuestEntityData;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.network.PacketByteBuf;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -22,9 +22,9 @@ public class QuestEntityPacket implements FabricPacket {
         this.questMarked = packetByteBuf.readBoolean();
     }
 
-    public QuestEntityPacket(MobEntity mob, UUID player,boolean questMarked){
+    public QuestEntityPacket(MobEntity mob, @Nullable UUID player, boolean questMarked){
         this.mobId = mob.getId();
-        this.player = player;
+        this.player = player == null ? new UUID(0,0) : player;
         this.questMarked = questMarked;
     }
 

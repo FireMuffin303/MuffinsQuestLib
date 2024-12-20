@@ -1,9 +1,7 @@
-package net.firemuffin303.muffinsquestlib.mixin;
+package net.firemuffin303.muffinsquestlib.mixin.questEntity;
 
 import com.mojang.logging.LogUtils;
-import net.firemuffin303.muffinsquestlib.common.PlayerQuestData;
 import net.firemuffin303.muffinsquestlib.common.QuestEntityData;
-import net.firemuffin303.muffinsquestlib.common.quest.QuestInstance;
 import net.minecraft.entity.Bucketable;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
