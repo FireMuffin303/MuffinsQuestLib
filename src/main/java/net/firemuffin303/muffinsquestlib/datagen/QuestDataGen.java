@@ -22,8 +22,8 @@ public class QuestDataGen extends FabricDynamicRegistryProvider {
         entries.add(wrapperLookup.getWrapperOrThrow(ModRegistries.QUEST_KEY),ModQuests.KILL_PHANTOM_5);
         entries.add(wrapperLookup.getWrapperOrThrow(ModRegistries.QUEST_KEY),ModQuests.COLLECT_PLANKS_32);
         entries.add(wrapperLookup.getWrapperOrThrow(ModRegistries.QUEST_KEY),ModQuests.BLAZE_KILLER_1);
-        entries.add(wrapperLookup.getWrapperOrThrow(ModRegistries.QUEST_KEY),ModQuests.WARDEN_SPAWN_TEST);
-        entries.add(wrapperLookup.getWrapperOrThrow(ModRegistries.QUEST_KEY),ModQuests.AXOLOTL_BUCKET_TEST);
+        //entries.add(wrapperLookup.getWrapperOrThrow(ModRegistries.QUEST_KEY),ModQuests.WARDEN_SPAWN_TEST);
+        //entries.add(wrapperLookup.getWrapperOrThrow(ModRegistries.QUEST_KEY),ModQuests.AXOLOTL_BUCKET_TEST);
     }
 
     @Override

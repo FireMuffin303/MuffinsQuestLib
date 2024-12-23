@@ -1,9 +1,11 @@
 {
+  "category.muffins_questlib": "Muffin's Quest Lib",
   "item.muffins_questlib.quest_paper": "กระดาษภารกิจ",
   "item.quest_paper.tooltip.collect_item": "✶ เก็บ %d %s",
   "item.quest_paper.tooltip.kill_entity": "✶ ฆ่า %d %s",
   "item.quest_paper.tooltip.quest_time": "เวลา : (%d)",
   "item.quest_paper.tooltip.rewards": "รางวัล :",
+  "key.muffins_questlib.questinfo": "เปิดรายละเอียดเควส",
   "quest_info_screen.cancel_quest": "ยกเลิกภารกิจ",
   "quest_info_screen.no_quest": "คุณไม่มีภารกิจอะไรเลย :(",
   "quest_info_screen.progress": "%s (%d/%d)",

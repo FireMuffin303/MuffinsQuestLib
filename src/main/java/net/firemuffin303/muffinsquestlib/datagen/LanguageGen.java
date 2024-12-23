@@ -23,6 +23,8 @@ public class LanguageGen extends FabricLanguageProvider {
         translationBuilder.add("item.quest_paper.tooltip.kill_entity", "✶ Kill %d %s");
         translationBuilder.add("item.quest_paper.tooltip.collect_item","✶ Collect %d %s");
         translationBuilder.add("item.quest_paper.tooltip.rewards","Rewards :");
+        translationBuilder.add("key.muffins_questlib.questinfo","Open Quest Info");
+        translationBuilder.add("category.muffins_questlib","Muffin's Quest Lib");
     }
 
     public static class ThaiLanguage extends FabricLanguageProvider {
@@ -43,6 +45,8 @@ public class LanguageGen extends FabricLanguageProvider {
             translationBuilder.add("item.quest_paper.tooltip.kill_entity", "✶ ฆ่า %d %s");
             translationBuilder.add("item.quest_paper.tooltip.collect_item","✶ เก็บ %d %s");
             translationBuilder.add("item.quest_paper.tooltip.rewards","รางวัล :");
+            translationBuilder.add("key.muffins_questlib.questinfo","เปิดรายละเอียดเควส");
+            translationBuilder.add("category.muffins_questlib","Muffin's Quest Lib");
 
 
         }

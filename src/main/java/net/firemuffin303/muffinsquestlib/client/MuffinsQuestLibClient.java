@@ -19,7 +19,7 @@ public class MuffinsQuestLibClient implements ClientModInitializer {
             new KeyBinding("key.muffins_questlib.questinfo",
                     InputUtil.Type.KEYSYM,
                     GLFW.GLFW_KEY_O,
-                    "category.muffins_questlib.questinfo.desc"));
+                    "category.muffins_questlib"));
 
     @Override
     public void onInitializeClient() {

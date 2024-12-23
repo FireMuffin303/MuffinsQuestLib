@@ -99,6 +99,8 @@ public class ModServerEventHandler {
                     entity.discard();
                 }
             }
+
+            ServerPlayNetworking.send(serverPlayerEntity,new UpdateQuestInstancePacket(questInstance));
         }
     }
 
