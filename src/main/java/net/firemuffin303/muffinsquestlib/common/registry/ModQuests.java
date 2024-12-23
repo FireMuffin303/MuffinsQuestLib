@@ -23,6 +23,7 @@ public class ModQuests {
     public static final RegistryKey<Quest> BLAZE_KILLER_1 = register("blaze_killer_1");
     public static final RegistryKey<Quest> WARDEN_SPAWN_TEST = register("warden_spawn_test");
     public static final RegistryKey<Quest> AXOLOTL_BUCKET_TEST = register("axolotl_bucket_test");
+    public static final RegistryKey<Quest> PILLAGER_10 = register("pillager_10");
 
     public static void init(){}
 
@@ -84,5 +85,10 @@ public class ModQuests {
         questRegisterable.register(AXOLOTL_BUCKET_TEST,new Quest(
                 new Quest.Definition(List.of(new ItemStack(Items.ECHO_SHARD,16)),20),"This only for check spawn testing"
         ).addQuest(ModQuestTypes.KILL_ENTITY_DATA,new KillEntityQuestData(new KillEntityQuestData.EntityRequirementEntry(EntityType.AXOLOTL,1))));
+
+        questRegisterable.register(PILLAGER_10,new Quest(
+                new Quest.Definition(List.of(new ItemStack(Items.ARROW,16)),20),"This only for check spawn testing"
+        ).addQuest(ModQuestTypes.KILL_ENTITY_DATA,new KillEntityQuestData(new KillEntityQuestData.EntityRequirementEntry(EntityType.PILLAGER,5))));
+
     }
 }

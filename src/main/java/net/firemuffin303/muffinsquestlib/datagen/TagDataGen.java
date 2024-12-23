@@ -8,6 +8,7 @@ import net.firemuffin303.muffinsquestlib.common.registry.ModRegistries;
 import net.firemuffin303.muffinsquestlib.common.registry.ModTags;
 import net.minecraft.entity.EntityType;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.registry.tag.EntityTypeTags;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -38,6 +39,12 @@ public class TagDataGen extends FabricTagProvider<Quest> {
                     .add(EntityType.WITHER)
                     .add(EntityType.ENDER_DRAGON)
                     .add(EntityType.ELDER_GUARDIAN);
+
+            this.getOrCreateTagBuilder(ModTags.QUEST_NO_CONDITION_SPAWN)
+                    .add(EntityType.PHANTOM)
+                    .add(EntityType.VILLAGER)
+                    .add(EntityType.IRON_GOLEM)
+                    .forceAddTag(EntityTypeTags.RAIDERS);
         }
     }
 }

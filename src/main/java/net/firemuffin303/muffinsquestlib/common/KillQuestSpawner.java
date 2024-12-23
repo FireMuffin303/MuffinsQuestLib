@@ -23,6 +23,9 @@ import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.StructureSpawns;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.SpawnSettings;
+import net.minecraft.world.dimension.DimensionOptions;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.dimension.DimensionTypes;
 import net.minecraft.world.gen.structure.Structure;
 import net.minecraft.world.spawner.Spawner;
 
@@ -141,6 +144,12 @@ public class KillQuestSpawner implements Spawner {
 
         if(entityType.isIn(ModTags.QUEST_SPAWN_BLACKLIST)){
             return false;
+        }
+
+        if(entityType.isIn(ModTags.QUEST_NO_CONDITION_SPAWN) && world.getDimensionKey() == DimensionTypes.OVERWORLD){
+            if(trySpawn(serverPlayerEntity,questInstance,world,blockPos,entityType)){
+                return true;
+            }
         }
 
         //We check structure to gatekeep mobs to not spawn in the place they should not be.

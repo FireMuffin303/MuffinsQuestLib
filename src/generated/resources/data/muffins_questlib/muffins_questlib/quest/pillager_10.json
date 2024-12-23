@@ -1,0 +1,24 @@
+{
+  "definition": {
+    "experience": 20,
+    "reward_item": [
+      {
+        "Count": 16,
+        "id": "minecraft:arrow"
+      }
+    ]
+  },
+  "description": "This only for check spawn testing",
+  "quest_type": {
+    "muffins_questlib:kill_entity": [
+      {
+        "type": "muffins_questlib:kill_entity",
+        "entity_requirements": {
+          "type": "minecraft:pillager",
+          "amount": 10
+        }
+      }
+    ]
+  },
+  "rarity": "COMMON"
+}
