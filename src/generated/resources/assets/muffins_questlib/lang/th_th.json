@@ -1,5 +1,16 @@
 {
   "category.muffins_questlib": "Muffin's Quest Lib",
+  "category.quest_lib.hud_options": "ตั้งค่า HUD",
+  "category.quest_lib.quest_mob_options": "ตั้งค่า Quest Mob",
+  "config.quest_lib.icon_position": "ตำแหน่งไอคอน",
+  "config.quest_lib.quest_mob_style": "ลักษณะการแสดง Quest Mob",
+  "config.quest_lib.quest_mob_style.icon": "ไอคอน",
+  "config.quest_lib.quest_mob_style.icon_and_outline": "ไอคอนและเส้นขอบ",
+  "config.quest_lib.quest_mob_style.none": "ไม่แสดง",
+  "config.quest_lib.quest_mob_style.outline": "เส้บขอบ",
+  "config.quest_lib.show_hud": "แสดง HUD",
+  "config.quest_lib.show_hud.false": "ปิด",
+  "config.quest_lib.show_hud.true": "เปิด",
   "item.muffins_questlib.quest_paper": "กระดาษภารกิจ",
   "item.quest_paper.tooltip.collect_item": "✶ เก็บ %d %s",
   "item.quest_paper.tooltip.kill_entity": "✶ ฆ่า %d %s",
@@ -11,5 +22,6 @@
   "quest_info_screen.progress": "%s (%d/%d)",
   "quest_info_screen.quest_name": "ภารกิจ : %s",
   "quest_info_screen.quest_reward": "รางวัล",
-  "quest_info_screen.title": "ภารกิจ"
+  "quest_info_screen.title": "ภารกิจ",
+  "screen.quest_config.title": "การตั้งค่า Muffin's Quest Lib"
 }

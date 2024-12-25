@@ -13,7 +13,8 @@
     "questSpawner.ServerWorldAccessor"
   ],
   "client": [
-    "questEntity.EntityRendererMixin"
+    "questEntity.EntityRendererMixin",
+    "questEntity.MinecraftClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1

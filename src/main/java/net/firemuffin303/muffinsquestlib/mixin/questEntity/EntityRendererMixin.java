@@ -1,7 +1,7 @@
 package net.firemuffin303.muffinsquestlib.mixin.questEntity;
 
-import com.mojang.logging.LogUtils;
 import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
+import net.firemuffin303.muffinsquestlib.client.config.ModConfig;
 import net.firemuffin303.muffinsquestlib.common.QuestEntityData;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -12,8 +12,6 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.DefaultSkinHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
@@ -26,8 +24,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Objects;
-
 @Debug(export = true)
 @Mixin(EntityRenderer.class)
 public abstract class EntityRendererMixin<T extends Entity> {
@@ -39,7 +35,7 @@ public abstract class EntityRendererMixin<T extends Entity> {
     @Inject(method = "render", at = @At(value = "HEAD"))
     public void questLib$showQuestIcon(T entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci){
         if(entity instanceof QuestEntityData.QuestEntityDataAccessor accessor){
-            if(accessor.getQuestEntityData().isQuestMarked()){
+            if(accessor.getQuestEntityData().isQuestMarked() && ModConfig.QUEST_MOB_STYLE.getCurrentValue().isIcon()){
                 showQuestIcon(entity,matrices,vertexConsumers,light,accessor);
             }
         }

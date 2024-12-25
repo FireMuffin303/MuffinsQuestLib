@@ -1,6 +1,7 @@
 package net.firemuffin303.muffinsquestlib.client;
 
 import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
+import net.firemuffin303.muffinsquestlib.client.config.ModConfig;
 import net.firemuffin303.muffinsquestlib.client.screen.QuestInfoScreen;
 import net.firemuffin303.muffinsquestlib.common.PlayerQuestData;
 import net.firemuffin303.muffinsquestlib.common.quest.Quest;
@@ -23,7 +24,10 @@ public class ModHudRender {
 
     public static void init(DrawContext drawContext,float delta){
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
-        questHUD(drawContext,delta,minecraftClient);
+        if(ModConfig.SHOW_HUD.getCurrentValue()){
+            questHUD(drawContext,delta,minecraftClient);
+        }
+
     }
 
     public static void questHUD(DrawContext drawContext, float delta,MinecraftClient client){

@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "id": "muffins_questlib",
   "version": "${version}",
-  "name": "MuffinsQuestLib",
-  "description": "",
+  "name": "Muffin's Quest Lib",
+  "description": "Added Quest System to Minecraft",
   "authors": ["FireMuffin303"],
   "contact": {},
   "license": "MIT",
-  "icon": "assets/muffinsquestlib/icon.png",
+  "icon": "assets/muffins_questlib/icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [
@@ -18,6 +18,9 @@
     ],
     "fabric-datagen": [
       "net.firemuffin303.muffinsquestlib.datagen.ModDataGen"
+    ],
+    "modmenu": [
+      "net.firemuffin303.muffinsquestlib.integration.ModMenuConfig"
     ]
   },
   "mixins": [

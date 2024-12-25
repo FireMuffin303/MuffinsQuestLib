@@ -1,6 +1,17 @@
 {
   "category.muffins_questlib": "Muffin's Quest Lib",
+  "category.quest_lib.hud_options": "HUD Options",
+  "category.quest_lib.quest_mob_options": "Quest Mob Options",
   "command.questlib.clear.success": "Successfully remove quest from %s",
+  "config.quest_lib.icon_position": "Icon Position",
+  "config.quest_lib.quest_mob_style": "Quest Mob Style",
+  "config.quest_lib.quest_mob_style.icon": "Icon",
+  "config.quest_lib.quest_mob_style.icon_and_outline": "Icon & Outline",
+  "config.quest_lib.quest_mob_style.none": "None",
+  "config.quest_lib.quest_mob_style.outline": "Outline",
+  "config.quest_lib.show_hud": "Show HUD",
+  "config.quest_lib.show_hud.false": "Off",
+  "config.quest_lib.show_hud.true": "On",
   "item.muffins_questlib.quest_paper": "Quest Paper",
   "item.quest_paper.tooltip.collect_item": "✶ Collect %d %s",
   "item.quest_paper.tooltip.kill_entity": "✶ Kill %d %s",
@@ -12,5 +23,6 @@
   "quest_info_screen.progress": "%s (%d/%d)",
   "quest_info_screen.quest_name": "Quest : %s",
   "quest_info_screen.quest_reward": "Rewards",
-  "quest_info_screen.title": "Quest"
+  "quest_info_screen.title": "Quest",
+  "screen.quest_config.title": "Muffin's Quest Lib Options"
 }

@@ -83,11 +83,12 @@ public class QuestInfoScreen extends Screen {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         this.renderBackground(context);
         super.render(context, mouseX, mouseY, delta);
-        Objects.requireNonNull(this.client);
-        Objects.requireNonNull(this.client.player);
-        this.renderForeground(context,mouseX,mouseY);
-        this.questCancelButton.active = ((PlayerQuestData.PlayerQuestDataAccessor)this.client.player).questLib$getData().getQuestInstance() != null;
 
+        this.renderForeground(context,mouseX,mouseY);
+
+        if(this.client != null && this.client.player != null){
+            this.questCancelButton.active = ((PlayerQuestData.PlayerQuestDataAccessor)this.client.player).questLib$getData().getQuestInstance() != null;
+        }
 
     }
 

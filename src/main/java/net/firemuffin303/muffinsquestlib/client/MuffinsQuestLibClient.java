@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
+import net.firemuffin303.muffinsquestlib.client.config.ModConfig;
 import net.firemuffin303.muffinsquestlib.client.screen.QuestInfoScreen;
 import net.firemuffin303.muffinsquestlib.common.item.QuestTooltipComponent;
 import net.firemuffin303.muffinsquestlib.common.item.QuestTooltipData;
@@ -23,6 +24,8 @@ public class MuffinsQuestLibClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        ModConfig.load();
+
         PacketHandler.clientInit();
         HudRenderCallback.EVENT.register(ModHudRender::init);
 

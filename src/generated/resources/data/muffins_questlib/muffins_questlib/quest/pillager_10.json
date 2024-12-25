@@ -15,7 +15,7 @@
         "type": "muffins_questlib:kill_entity",
         "entity_requirements": {
           "type": "minecraft:pillager",
-          "amount": 10
+          "amount": 5
         }
       }
     ]
