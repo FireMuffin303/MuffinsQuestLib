@@ -33,13 +33,20 @@ public class LanguageGen extends FabricLanguageProvider {
         translationBuilder.add("config.quest_lib.show_hud.true","On");
         translationBuilder.add("config.quest_lib.show_hud.false","Off");
         translationBuilder.add("config.quest_lib.icon_position","Icon Position");
+        translationBuilder.add("config.quest_lib.icon_position.x","Icon Position X");
+        translationBuilder.add("config.quest_lib.icon_position.y","Icon Position Y");
         translationBuilder.add("category.quest_lib.quest_mob_options","Quest Mob Options");
+
         translationBuilder.add("config.quest_lib.quest_mob_style","Quest Mob Style");
         translationBuilder.add("config.quest_lib.quest_mob_style.none","None");
         translationBuilder.add("config.quest_lib.quest_mob_style.icon","Icon");
         translationBuilder.add("config.quest_lib.quest_mob_style.outline","Outline");
         translationBuilder.add("config.quest_lib.quest_mob_style.icon_and_outline","Icon & Outline");
 
+        //ModMenu
+        translationBuilder.add("modmenu.descriptionTranslation.muffins_questlib","Add Data-Drive Quest System to Minecraft!");
+        translationBuilder.add("modmenu.nameTranslation.muffins_questlib","Muffin's Quest Lib");
+        translationBuilder.add("modmenu.summaryTranslation.muffins_questlib","Add Data-Drive Quest System to Minecraft!");
     }
 
     public static class ThaiLanguage extends FabricLanguageProvider {
@@ -70,6 +77,8 @@ public class LanguageGen extends FabricLanguageProvider {
             translationBuilder.add("config.quest_lib.show_hud.true","เปิด");
             translationBuilder.add("config.quest_lib.show_hud.false","ปิด");
             translationBuilder.add("config.quest_lib.icon_position","ตำแหน่งไอคอน");
+            translationBuilder.add("config.quest_lib.icon_position.x","ตำแหน่งไอคอนแนวนอน");
+            translationBuilder.add("config.quest_lib.icon_position.y","ตำแหน่งไอคอนแนวตั้ง");
             translationBuilder.add("category.quest_lib.quest_mob_options","ตั้งค่า Quest Mob");
             translationBuilder.add("config.quest_lib.quest_mob_style","ลักษณะการแสดง Quest Mob");
             translationBuilder.add("config.quest_lib.quest_mob_style.none","ไม่แสดง");
@@ -77,6 +86,9 @@ public class LanguageGen extends FabricLanguageProvider {
             translationBuilder.add("config.quest_lib.quest_mob_style.outline","เส้บขอบ");
             translationBuilder.add("config.quest_lib.quest_mob_style.icon_and_outline","ไอคอนและเส้นขอบ");
 
+            translationBuilder.add("modmenu.descriptionTranslation.muffins_questlib","เพิ่มระบบเควสในไมน์คราฟ แบบปรับแต่งได้!");
+            translationBuilder.add("modmenu.nameTranslation.muffins_questlib","Muffin's Quest Lib");
+            translationBuilder.add("modmenu.summaryTranslation.muffins_questlib","เพิ่มระบบเควสในไมน์คราฟ แบบปรับแต่งได้!");
         }
     }
 }

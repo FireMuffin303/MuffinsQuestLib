@@ -3,14 +3,13 @@ package net.firemuffin303.muffinsquestlib.client.config;
 import com.google.gson.*;
 import com.mojang.logging.LogUtils;
 import net.fabricmc.loader.api.FabricLoader;
-import net.firemuffin303.muffinsquestlib.client.screen.QuestConfigScreen;
-import net.firemuffin303.muffinsquestlib.integration.ModMenuConfig;
-import net.minecraft.text.Text;
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.Pair;
+import net.minecraft.util.TranslatableOption;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec2f;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -27,9 +26,9 @@ public class ModConfig {
     public static ModOption<QuestMobShown> QUEST_MOB_STYLE = new ModOption<>("config.quest_lib.quest_mob_style",QuestMobShown.ICON,List.of(QuestMobShown.values()));
 
 
-    public static Map<String, List<ModOption<?>>> OPTIONS = Map.of(
-            "hud_options",List.of(SHOW_HUD,ICON_POSITION),
-            "quest_mob_options",List.of(QUEST_MOB_STYLE));
+    public static List<Pair<String, List<ModOption<?>>>> OPTIONS = List.of(
+            new Pair<>("hud_options",List.of(SHOW_HUD,ICON_POSITION)),
+            new Pair<>("quest_mob_options",List.of(QUEST_MOB_STYLE)));
 
 
     public static void load(){
@@ -49,6 +48,22 @@ public class ModConfig {
                         SHOW_HUD.setValue(jsonObject.getAsJsonPrimitive(SHOW_HUD.id).getAsBoolean());
                     }
 
+                    if(jsonObject.getAsJsonPrimitive(QUEST_MOB_STYLE.getId()) != null){
+                        QUEST_MOB_STYLE.setValue(QuestMobShown.byId(jsonObject.getAsJsonPrimitive(QUEST_MOB_STYLE.getId()).getAsInt()));
+                    }
+
+                    if(jsonObject.getAsJsonObject(ICON_POSITION.getId()) != null){
+                        JsonObject iconPosition = jsonObject.getAsJsonObject(ICON_POSITION.getId());
+                        JsonPrimitive xJSON = iconPosition.getAsJsonPrimitive("x");
+                        JsonPrimitive yJSON = iconPosition.getAsJsonPrimitive("y");
+                        if(xJSON != null && yJSON != null){
+                            float x = MathHelper.clamp(xJSON.getAsFloat(),0.0f,1.0f);
+                            float y = MathHelper.clamp(yJSON.getAsFloat(),0.0f,1.0f);
+                            ICON_POSITION.setValue(new Vec2f(x,y));
+                        }
+
+                    }
+
                 }
 
 
@@ -65,12 +80,7 @@ public class ModConfig {
             OPTION_FILE = new File(FabricLoader.getInstance().getConfigDir().toFile(),"muffins_questlib.json");
         }
 
-        JsonObject jsonObject = new JsonObject();
-
-        jsonObject.addProperty(SHOW_HUD.id,SHOW_HUD.getCurrentValue());
-        jsonObject.addProperty(QUEST_MOB_STYLE.id,QUEST_MOB_STYLE.getCurrentValue().asString());
-
-        String config = GSON.toJson(jsonObject);
+        String config = GSON.toJson(getJsonObject());
 
         try{
             FileWriter fileWriter = new FileWriter(OPTION_FILE);
@@ -89,6 +99,20 @@ public class ModConfig {
             e.printStackTrace();
         }
 
+    }
+
+    private static @NotNull JsonObject getJsonObject() {
+        JsonObject jsonObject = new JsonObject();
+
+        jsonObject.addProperty(SHOW_HUD.id,SHOW_HUD.getCurrentValue());
+
+        JsonObject iconPosition = new JsonObject();
+        iconPosition.addProperty("x",ICON_POSITION.getCurrentValue().x);
+        iconPosition.addProperty("y",ICON_POSITION.getCurrentValue().y);
+
+        jsonObject.add(ICON_POSITION.getId(), iconPosition);
+        jsonObject.addProperty(QUEST_MOB_STYLE.id,QUEST_MOB_STYLE.getCurrentValue().getId());
+        return jsonObject;
     }
 
 
@@ -138,16 +162,18 @@ public class ModConfig {
         }
     }
 
-    public enum QuestMobShown implements StringIdentifiable {
-        NONE("none"),
-        ICON("icon"),
-        OUTLINE("outline"),
-        ICON_AND_OUTLINE("icon_and_outline");
+    public enum QuestMobShown implements TranslatableOption {
+        NONE(0,"none"),
+        ICON(1,"icon"),
+        OUTLINE(2,"outline"),
+        ICON_AND_OUTLINE(3,"icon_and_outline");
 
-        final String id;
+        final int id;
+        final String key;
 
-        QuestMobShown(String id){
+        QuestMobShown(int id,String key){
             this.id = id;
+            this.key = key;
         }
 
         public boolean isIcon(){
@@ -159,8 +185,19 @@ public class ModConfig {
         }
 
         @Override
-        public String asString() {
+        public int getId() {
             return this.id;
+        }
+
+        @Override
+        public String getTranslationKey() {
+            return this.key;
+        }
+
+        public static QuestMobShown byId(int id){
+            List<QuestMobShown> questMobShown = List.of(values());
+            int i = MathHelper.clamp(id,0,questMobShown.size()-1);
+            return questMobShown.get(i);
         }
     }
 }

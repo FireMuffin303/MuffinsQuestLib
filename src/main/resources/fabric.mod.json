@@ -3,7 +3,7 @@
   "id": "muffins_questlib",
   "version": "${version}",
   "name": "Muffin's Quest Lib",
-  "description": "Added Quest System to Minecraft",
+  "description": "Adds Quest System to Minecraft",
   "authors": ["FireMuffin303"],
   "contact": {},
   "license": "MIT",

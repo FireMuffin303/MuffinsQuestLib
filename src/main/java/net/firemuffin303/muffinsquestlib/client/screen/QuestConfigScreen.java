@@ -10,7 +10,9 @@ import net.minecraft.client.gui.widget.*;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Pair;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec2f;
 
 import java.util.List;
 import java.util.Map;
@@ -34,25 +36,66 @@ public class QuestConfigScreen extends Screen {
 
         int row = 1;
         for(int i = 0; i < ModConfig.OPTIONS.size(); i++){
-            Map.Entry<String,List<ModConfig.ModOption<?>>> entry = ModConfig.OPTIONS.entrySet().stream().toList().get(i);
-            String key = entry.getKey();
-            List<ModConfig.ModOption<?>> modOptions = entry.getValue();
+            Pair<String,List<ModConfig.ModOption<?>>> entry = ModConfig.OPTIONS.get(i);
+            String key = entry.getLeft();
+            List<ModConfig.ModOption<?>> modOptions = entry.getRight();
             GridWidget.Adder adder = new GridWidget().setRowSpacing(5).createAdder(1);
             adder.add(new TextWidget(Text.translatable("category.quest_lib."+key).formatted(Formatting.BOLD,Formatting.YELLOW,Formatting.UNDERLINE),this.textRenderer));
 
             GridWidget.Adder options = new GridWidget().setColumnSpacing(10).setRowSpacing(5).createAdder(2);
-            options.add(EmptyWidget.ofWidth(310));
-            options.add(EmptyWidget.ofWidth(80));
+            options.add(EmptyWidget.ofWidth(280));
+            options.add(EmptyWidget.ofWidth(120));
 
             for(ModConfig.ModOption<?> modOption : modOptions){
                 TextWidget textWidget = new TextWidget(Text.translatable(modOption.getId()),this.textRenderer);
-                ButtonWidget buttonWidget = ButtonWidget.builder(Text.translatable(modOption.getId()+"."+modOption.getValueAsString()),button -> {
-                    modOption.changeValue(Screen.hasShiftDown());
-                    button.setMessage(Text.translatable(modOption.getId()+"."+modOption.getValueAsString()));
+                Widget widget;
+                if(modOption == ModConfig.ICON_POSITION){
+                    //This is stupid, but whatever.
+                    textWidget = new TextWidget(Text.translatable(modOption.getId()+".x"),this.textRenderer);
+                    widget = new SliderWidget(0,0,120,20,Text.literal(String.format("x : %.02f",ModConfig.ICON_POSITION.getCurrentValue().x)),ModConfig.ICON_POSITION.getCurrentValue().x) {
+                        @Override
+                        protected void updateMessage() {
+                            String sliderText = String.format("x : %.02f",this.value);
+                            this.setMessage(Text.literal(sliderText));
+                        }
 
-                }).width(80).build();
-                options.add(textWidget,Positioner.create().marginTop(6));
-                options.add(buttonWidget);
+                        @Override
+                        protected void applyValue() {
+                            ModConfig.ICON_POSITION.setValue(new Vec2f((float) this.value,ModConfig.ICON_POSITION.getCurrentValue().y));
+                        }
+                    };
+
+                    options.add(textWidget,Positioner.create().marginTop(6));
+                    options.add(widget);
+
+                    textWidget = new TextWidget(Text.translatable(modOption.getId()+".y"),this.textRenderer);
+
+                    widget = new SliderWidget(0,0,120,20,Text.literal(String.format("y : %.02f",ModConfig.ICON_POSITION.getCurrentValue().y)),ModConfig.ICON_POSITION.getCurrentValue().y) {
+                        @Override
+                        protected void updateMessage() {
+                            String sliderText = String.format("y : %.02f",this.value);
+                            this.setMessage(Text.literal(sliderText));
+                        }
+
+                        @Override
+                        protected void applyValue() {
+
+                            ModConfig.ICON_POSITION.setValue(new Vec2f(ModConfig.ICON_POSITION.getCurrentValue().x,(float)this.value));
+                        }
+                    };
+
+                    options.add(textWidget,Positioner.create().marginTop(6));
+                    options.add(widget);
+
+                }else{
+                    widget = ButtonWidget.builder(Text.translatable(modOption.getId()+"."+modOption.getValueAsString()),button -> {
+                        modOption.changeValue(Screen.hasShiftDown());
+                        button.setMessage(Text.translatable(modOption.getId()+"."+modOption.getValueAsString()));
+                    }).width(80).build();
+
+                    options.add(textWidget,Positioner.create().marginTop(6));
+                    options.add(widget,Positioner.create().alignRight());
+                }
             }
 
             gridWidget.add(adder.getGridWidget(),row,0);

@@ -1,5 +1,6 @@
 package net.firemuffin303.muffinsquestlib.client;
 
+import com.mojang.logging.LogUtils;
 import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
 import net.firemuffin303.muffinsquestlib.client.config.ModConfig;
 import net.firemuffin303.muffinsquestlib.client.screen.QuestInfoScreen;
@@ -43,9 +44,18 @@ public class ModHudRender {
                 f = MathHelper.clamp((float)m / 10.0F / 5.0F * 0.5F, 0.0F, 0.5F) + MathHelper.cos((float)m * 3.1415927F / 5.0F) * MathHelper.clamp((float)n / 10.0F * 0.25F, 0.0F, 0.25F);
             }
 
+            String time = String.format("%02d:%02d",((questInstance.time/20)/60),((questInstance.time/20)%60));
+            int maxX = 28 + client.textRenderer.getWidth(Text.literal(time));
+
+            int x = (int)(((float)drawContext.getScaledWindowWidth()-maxX) * ModConfig.ICON_POSITION.getCurrentValue().x);
+            int y = (int)(((float)drawContext.getScaledWindowHeight()-24) * ModConfig.ICON_POSITION.getCurrentValue().y);
+
+
             drawContext.setShaderColor(1.0f,1.0f,1.0f,f);
-            drawContext.drawTexture(QuestInfoScreen.QUEST_SCREEN_TEXTURE,0,0,i,0,24,24);
-            drawContext.drawText(client.textRenderer,Text.of((questInstance.time/20)/60+":"+ (questInstance.time/20)%60 ),26,8,0xffffff,false);
+            drawContext.drawTexture(QuestInfoScreen.QUEST_SCREEN_TEXTURE,x,y, i,0,24,24);
+
+
+            drawContext.drawText(client.textRenderer,Text.literal(time),x+26,y+8,0xffffff,false);
             drawContext.setShaderColor(1.0f,1.0f,1.0f,1.0f);
         }
     }
