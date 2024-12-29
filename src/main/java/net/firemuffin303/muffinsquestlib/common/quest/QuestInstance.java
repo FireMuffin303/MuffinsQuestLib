@@ -142,8 +142,10 @@ public class QuestInstance {
     public void writeNbt(PlayerEntity player, NbtCompound nbtCompound){
         World world = player.getWorld();
         NbtCompound questInstance = new NbtCompound();
+        //Identifier identifier = MuffinsQuestLib.QUEST_MANAGER.getQuestById().entrySet().stream().filter(identifierQuestEntry -> identifierQuestEntry.getValue() == this.quest).toList().get(0).getKey();
+
         Identifier identifier = world.getRegistryManager().get(ModRegistries.QUEST_KEY).getId(this.quest);
-        Objects.requireNonNull(identifier);
+        Objects.requireNonNull(identifier,"Quest ID not found.");
         questInstance.putString("QuestID", identifier.toString());
 
 
@@ -160,11 +162,6 @@ public class QuestInstance {
         questInstance.put("QuestEntities",questEntities);
 
         nbtCompound.put("QuestInstance",questInstance);
-
-
-
-
-
     }
 
     public static QuestInstance readNbt(PlayerEntity player,NbtCompound nbtCompound){

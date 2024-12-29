@@ -2,49 +2,35 @@ package net.firemuffin303.muffinsquestlib;
 
 import com.mojang.logging.LogUtils;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
-import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
-import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
-import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.firemuffin303.muffinsquestlib.common.ModServerEventHandler;
 import net.firemuffin303.muffinsquestlib.common.PlayerQuestData;
-import net.firemuffin303.muffinsquestlib.common.QuestEntityData;
+import net.firemuffin303.muffinsquestlib.common.QuestManager;
 import net.firemuffin303.muffinsquestlib.common.command.ModCommands;
 import net.firemuffin303.muffinsquestlib.common.item.QuestPaperItem;
-import net.firemuffin303.muffinsquestlib.common.network.UpdateQuestInstancePacket;
-import net.firemuffin303.muffinsquestlib.common.quest.Quest;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestInstance;
 import net.firemuffin303.muffinsquestlib.common.registry.*;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.village.TradeOffer;
-import net.minecraft.village.TradeOffers;
 import net.minecraft.world.GameRules;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
-
-import java.util.List;
 
 public class MuffinsQuestLib implements ModInitializer {
     public static final GameRules.Key<GameRules.BooleanRule> DO_QUEST_TARGET_ENTITY_SPAWN  = GameRuleRegistry.register("muffins_questlib:doQuestTargetEntitySpawn", GameRules.Category.SPAWNING,GameRuleFactory.createBooleanRule(true));
+
+    //Successfully quest datapack hotswap... but need to be sync to client, which is impossible. for now.
+    public static final QuestManager QUEST_MANAGER = new QuestManager();
 
     public static final String MOD_ID = "muffins_questlib";
     public static final Logger LOGGER = LogUtils.getLogger();
@@ -52,7 +38,6 @@ public class MuffinsQuestLib implements ModInitializer {
             .displayName(Text.literal("Quest Library"))
             .icon(() -> new ItemStack(ModItems.QUEST_PAPER_ITEM))
             .entries((displayContext, entries) -> {
-
                 displayContext.lookup().getOptionalWrapper(ModRegistries.QUEST_KEY).ifPresent(questImpl -> {
                     questImpl.streamEntries().map(questReference -> QuestPaperItem.getQuestPaper(questReference.registryKey().getValue(),18000)).forEach(entries::add);
                 });
@@ -61,8 +46,6 @@ public class MuffinsQuestLib implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        Registry.register(Registries.ITEM_GROUP, MuffinsQuestLib.modId("main"),MOD_ITEM_GROUP);
-
         ModRegistries.init();
         ModCommands.init();
         ModSoundEvents.init();
@@ -70,19 +53,11 @@ public class MuffinsQuestLib implements ModInitializer {
         ModQuests.init();
         ModItems.init();
 
+        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(QUEST_MANAGER);
+
+        Registry.register(Registries.ITEM_GROUP, MuffinsQuestLib.modId("main"),MOD_ITEM_GROUP);
+
         ModServerEventHandler.init();
-
-        ServerPlayNetworking.registerGlobalReceiver(MuffinsQuestLib.modId("clear_quest_c2s"),(minecraftServer, serverPlayerEntity, serverPlayNetworkHandler, packetByteBuf, packetSender) -> {
-            if(((PlayerQuestData.PlayerQuestDataAccessor)serverPlayerEntity).questLib$getData().getQuestInstance() != null){
-                minecraftServer.execute(() -> ((PlayerQuestData.PlayerQuestDataAccessor)serverPlayerEntity).questLib$getData().getQuestInstance().setState(QuestInstance.State.FAIL));
-
-            }
-        });
-
-
-        TradeOfferHelper.registerWanderingTraderOffers(1,factories -> {
-            factories.add(new QuestTradeOffer(16,1,1,1));
-        });
     }
 
 
@@ -104,26 +79,4 @@ public class MuffinsQuestLib implements ModInitializer {
     }
 
 
-
-
-    public static class QuestTradeOffer implements TradeOffers.Factory{
-        private final int price;
-        private final int maxUses;
-        private final int experience;
-        private final float multiplier;
-
-        public QuestTradeOffer(int price,int maxUses,int experience,int multiplier){
-            this.price = price;
-            this.maxUses = maxUses;
-            this.experience = experience;
-            this.multiplier = multiplier;
-        }
-
-        @Override
-        public @Nullable TradeOffer create(Entity entity, Random random) {
-            List<RegistryEntry.Reference<Quest>> quests = entity.getWorld().getRegistryManager().get(ModRegistries.QUEST_KEY).streamEntries().filter(questReference -> questReference.isIn(ModTags.WANDERING_TRADER_QUESTS)).toList();
-            RegistryEntry.Reference<Quest> questReference = quests.get(random.nextInt(quests.size()-1));
-            return new TradeOffer(new ItemStack(Items.GOLD_INGOT,this.price), QuestPaperItem.getQuestPaper(questReference.registryKey().getValue(),18000),1,this.experience,0.05f);
-        }
-    }
 }

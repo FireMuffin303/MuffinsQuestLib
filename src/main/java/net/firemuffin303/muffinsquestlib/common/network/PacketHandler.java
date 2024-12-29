@@ -3,6 +3,7 @@ package net.firemuffin303.muffinsquestlib.common.network;
 import com.mojang.logging.LogUtils;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
 import net.firemuffin303.muffinsquestlib.common.PlayerQuestData;
 import net.firemuffin303.muffinsquestlib.common.QuestEntityData;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestInstance;
@@ -20,6 +21,7 @@ public class PacketHandler {
         ClientPlayNetworking.registerGlobalReceiver(UpdateQuestInstancePacket.TYPE,PacketHandler::onUpdateQuest);
         ClientPlayNetworking.registerGlobalReceiver(ClearQuestInstancePacket.TYPE,PacketHandler::onClearQuest);
         ClientPlayNetworking.registerGlobalReceiver(QuestEntityPacket.TYPE,PacketHandler::onQuestEntityDataUpdate);
+        ClientPlayNetworking.registerGlobalReceiver(QuestManagerUpdatePacket.TYPE,PacketHandler::onQuestManagerUpdate);
     }
 
     public static void onUpdateQuest(UpdateQuestInstancePacket updateQuestInstancePacket,ClientPlayerEntity clientPlayerEntity,PacketSender sender){
@@ -39,6 +41,10 @@ public class PacketHandler {
             accessor.getQuestEntityData().setPlayerUUID(questEntityPacket.player.equals(new UUID(0,0)) ? null : questEntityPacket.player);
             accessor.getQuestEntityData().setQuestMarked(questEntityPacket.questMarked);
         }
+    }
+
+    public static void onQuestManagerUpdate(QuestManagerUpdatePacket questManagerUpdatePacket,ClientPlayerEntity clientPlayerEntity,PacketSender packetSender){
+        MuffinsQuestLib.QUEST_MANAGER.setQuestById(questManagerUpdatePacket.getQuestMap());
     }
 
 

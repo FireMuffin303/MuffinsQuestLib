@@ -1,26 +1,28 @@
 package net.firemuffin303.muffinsquestlib.common;
 
-import com.mojang.logging.LogUtils;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
-import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.S2CPlayChannelEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
+import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
+import net.firemuffin303.muffinsquestlib.api.QuestTradeOffers;
 import net.firemuffin303.muffinsquestlib.common.network.UpdateQuestInstancePacket;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestInstance;
 import net.firemuffin303.muffinsquestlib.common.quest.condition.QuestConitions;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.item.Items;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.village.TradeOffers;
 
+import java.util.List;
 import java.util.UUID;
 
 public class ModServerEventHandler {
@@ -37,9 +39,16 @@ public class ModServerEventHandler {
         ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register(ModServerEventHandler::onPlayerChangeDimension);
         ServerPlayConnectionEvents.JOIN.register(ModServerEventHandler::onPlayerJoined);
 
-        //TODO : Use this event instead of mixin for quest progressing.
-        //Why am I not check fabric api event first. goddamit.
         ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register(ModServerEventHandler::onLivingEntityAfterDeath);
+
+        TradeOfferHelper.registerWanderingTraderOffers(1,ModServerEventHandler::onWanderingTraderTradeModify);
+
+        ServerPlayNetworking.registerGlobalReceiver(MuffinsQuestLib.modId("clear_quest_c2s"),(minecraftServer, serverPlayerEntity, serverPlayNetworkHandler, packetByteBuf, packetSender) -> {
+            if(((PlayerQuestData.PlayerQuestDataAccessor)serverPlayerEntity).questLib$getData().getQuestInstance() != null){
+                minecraftServer.execute(() -> ((PlayerQuestData.PlayerQuestDataAccessor)serverPlayerEntity).questLib$getData().getQuestInstance().setState(QuestInstance.State.FAIL));
+            }
+        });
+
     }
 
     private static void onEntityLoaded(Entity entity,ServerWorld serverWorld){
@@ -116,5 +125,9 @@ public class ModServerEventHandler {
         if(attacker instanceof ServerPlayerEntity serverPlayerEntity){
             QuestConitions.KILL_MOB_CONDITION.trigger(serverPlayerEntity, serverWorld,killedEntity);
         }
+    }
+
+    private static void onWanderingTraderTradeModify(List<TradeOffers.Factory> factories){
+        factories.add(new QuestTradeOffers.WanderingTraderQuestOffer(Items.EMERALD,16,1));
     }
 }

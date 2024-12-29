@@ -18,13 +18,22 @@ public class LanguageGen extends FabricLanguageProvider {
         translationBuilder.add("quest_info_screen.quest_reward","Rewards");
         translationBuilder.add("quest_info_screen.progress","%s (%d/%d)");
         translationBuilder.add("quest_info_screen.cancel_quest","Cancel Quest");
-        translationBuilder.add("command.questlib.clear.success","Successfully remove quest from %s");
         translationBuilder.add("item.quest_paper.tooltip.quest_time","Time : (%d)");
         translationBuilder.add("item.quest_paper.tooltip.kill_entity", "✶ Kill %d %s");
         translationBuilder.add("item.quest_paper.tooltip.collect_item","✶ Collect %d %s");
         translationBuilder.add("item.quest_paper.tooltip.rewards","Rewards :");
         translationBuilder.add("key.muffins_questlib.questinfo","Open Quest Info");
         translationBuilder.add("category.muffins_questlib","Muffin's Quest Lib");
+
+        //Command
+        translationBuilder.add("command.questlib.clear.single","Successfully remove quest from %s");
+        translationBuilder.add("command.questlib.clear.multiples","Successfully remove quest from %s players");
+        translationBuilder.add("command.questlib.give.success.single","Gave quest to %s");
+        translationBuilder.add("command.questlib.give.success.multiples","Gave quest to %s players");
+        translationBuilder.add("command.questlib.givepaper.success.single","Gave quest paper to %s");
+        translationBuilder.add("command.questlib.givepaper.success.multiples","Gave quest paper to %s players");
+        translationBuilder.add("command.questlib.getquest.success","%s's Quest is %s");
+        translationBuilder.add("command.questlib.getquest.no_quest","%s has no quest.");
 
         //Config
         translationBuilder.add("screen.quest_config.title","Muffin's Quest Lib Options");
@@ -80,12 +89,25 @@ public class LanguageGen extends FabricLanguageProvider {
             translationBuilder.add("config.quest_lib.icon_position.x","ตำแหน่งไอคอนแนวนอน");
             translationBuilder.add("config.quest_lib.icon_position.y","ตำแหน่งไอคอนแนวตั้ง");
             translationBuilder.add("category.quest_lib.quest_mob_options","ตั้งค่า Quest Mob");
+
+            //Command
+            translationBuilder.add("command.questlib.clear.single","ลบเควสของ %s ได้สำเร็จ");
+            translationBuilder.add("command.questlib.clear.multiples","ลบเควสจากผู้เล่น %s คนได้สำเร็จ");
+            translationBuilder.add("command.questlib.give.success.single","ให้เควสกับ %s");
+            translationBuilder.add("command.questlib.give.success.multiples","ให้เควสกับผู้เล่น %s คน");
+            translationBuilder.add("command.questlib.givepaper.success.single","ให้กระดาษเควสกับ %s");
+            translationBuilder.add("command.questlib.givepaper.success.multiples","ให้กระดาษเควสกับผู้เล่น %s คน");
+            translationBuilder.add("command.questlib.getquest.success","เควสของ %s คือ %s");
+            translationBuilder.add("command.questlib.getquest.no_quest","%s ไม่มีเควส.");
+
+            //Config
             translationBuilder.add("config.quest_lib.quest_mob_style","ลักษณะการแสดง Quest Mob");
             translationBuilder.add("config.quest_lib.quest_mob_style.none","ไม่แสดง");
             translationBuilder.add("config.quest_lib.quest_mob_style.icon","ไอคอน");
             translationBuilder.add("config.quest_lib.quest_mob_style.outline","เส้บขอบ");
             translationBuilder.add("config.quest_lib.quest_mob_style.icon_and_outline","ไอคอนและเส้นขอบ");
 
+            //modmenu
             translationBuilder.add("modmenu.descriptionTranslation.muffins_questlib","เพิ่มระบบเควสในไมน์คราฟ แบบปรับแต่งได้!");
             translationBuilder.add("modmenu.nameTranslation.muffins_questlib","Muffin's Quest Lib");
             translationBuilder.add("modmenu.summaryTranslation.muffins_questlib","เพิ่มระบบเควสในไมน์คราฟ แบบปรับแต่งได้!");

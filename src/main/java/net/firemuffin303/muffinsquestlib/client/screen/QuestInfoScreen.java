@@ -135,7 +135,8 @@ public class QuestInfoScreen extends Screen {
 
 
                 context.drawItemWithoutEntity(new ItemStack(ModItems.QUEST_PAPER_ITEM,1),x+10,y+26);
-                context.drawText(this.textRenderer,Text.translatable("item.quest_paper.tooltip.quest_time", Text.of((questInstance.time/20)/60+":"+ (questInstance.time/20)%60 )),x+32,y+30,11184810,false);
+                String time = String.format("%02d:%02d",((questInstance.time/20)/60),((questInstance.time/20)%60));
+                context.drawText(this.textRenderer,Text.translatable("item.quest_paper.tooltip.quest_time", time),x+32,y+30,11184810,false);
 
                 Text description = Text.translatable(questInstance.getQuest().description);
                 List<OrderedText> textDescriptions = textRenderer.wrapLines(description,145);

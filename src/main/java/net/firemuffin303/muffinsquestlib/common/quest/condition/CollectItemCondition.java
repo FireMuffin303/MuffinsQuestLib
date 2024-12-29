@@ -3,6 +3,7 @@ package net.firemuffin303.muffinsquestlib.common.quest.condition;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.firemuffin303.muffinsquestlib.common.PlayerQuestData;
 import net.firemuffin303.muffinsquestlib.common.network.UpdateQuestInstancePacket;
+import net.firemuffin303.muffinsquestlib.common.quest.data.CollectItemQuestData;
 import net.firemuffin303.muffinsquestlib.common.quest.data.QuestData;
 import net.firemuffin303.muffinsquestlib.common.registry.ModQuestTypes;
 import net.minecraft.item.ItemStack;
