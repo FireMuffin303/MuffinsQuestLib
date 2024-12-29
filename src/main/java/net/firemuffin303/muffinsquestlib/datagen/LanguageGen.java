@@ -2,7 +2,7 @@ package net.firemuffin303.muffinsquestlib.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
-import net.firemuffin303.muffinsquestlib.common.registry.ModItems;
+import net.firemuffin303.muffinsquestlib.common.registry.QuestItems;
 
 public class LanguageGen extends FabricLanguageProvider {
     protected LanguageGen(FabricDataOutput dataOutput) {
@@ -11,16 +11,19 @@ public class LanguageGen extends FabricLanguageProvider {
 
     @Override
     public void generateTranslations(TranslationBuilder translationBuilder) {
-        translationBuilder.add(ModItems.QUEST_PAPER_ITEM,"Quest Paper");
+        translationBuilder.add(QuestItems.QUEST_PAPER_ITEM,"Quest Paper");
         translationBuilder.add("quest_info_screen.title","Quest");
         translationBuilder.add("quest_info_screen.no_quest","You don't have any quest. :(");
         translationBuilder.add("quest_info_screen.quest_name","Quest : %s");
         translationBuilder.add("quest_info_screen.quest_reward","Rewards");
         translationBuilder.add("quest_info_screen.progress","%s (%d/%d)");
         translationBuilder.add("quest_info_screen.cancel_quest","Cancel Quest");
+
         translationBuilder.add("item.quest_paper.tooltip.quest_time","Time : (%d)");
         translationBuilder.add("item.quest_paper.tooltip.kill_entity", "✶ Kill %d %s");
         translationBuilder.add("item.quest_paper.tooltip.collect_item","✶ Collect %d %s");
+        translationBuilder.add("item.quest_paper.tooltip.break_block","✶ Mine %d %s");
+
         translationBuilder.add("item.quest_paper.tooltip.rewards","Rewards :");
         translationBuilder.add("key.muffins_questlib.questinfo","Open Quest Info");
         translationBuilder.add("category.muffins_questlib","Muffin's Quest Lib");
@@ -65,16 +68,18 @@ public class LanguageGen extends FabricLanguageProvider {
 
         @Override
         public void generateTranslations(TranslationBuilder translationBuilder) {
-            translationBuilder.add(ModItems.QUEST_PAPER_ITEM,"กระดาษภารกิจ");
+            translationBuilder.add(QuestItems.QUEST_PAPER_ITEM,"กระดาษภารกิจ");
             translationBuilder.add("quest_info_screen.title","ภารกิจ");
             translationBuilder.add("quest_info_screen.no_quest","คุณไม่มีภารกิจอะไรเลย :(");
             translationBuilder.add("quest_info_screen.quest_name","ภารกิจ : %s");
             translationBuilder.add("quest_info_screen.quest_reward","รางวัล");
             translationBuilder.add("quest_info_screen.progress","%s (%d/%d)");
             translationBuilder.add("quest_info_screen.cancel_quest","ยกเลิกภารกิจ");
+
             translationBuilder.add("item.quest_paper.tooltip.quest_time","เวลา : (%d)");
             translationBuilder.add("item.quest_paper.tooltip.kill_entity", "✶ ฆ่า %d %s");
             translationBuilder.add("item.quest_paper.tooltip.collect_item","✶ เก็บ %d %s");
+            translationBuilder.add("item.quest_paper.tooltip.break_block","✶ ขุด %d %s");
             translationBuilder.add("item.quest_paper.tooltip.rewards","รางวัล :");
             translationBuilder.add("key.muffins_questlib.questinfo","เปิดรายละเอียดเควส");
             translationBuilder.add("category.muffins_questlib","Muffin's Quest Lib");

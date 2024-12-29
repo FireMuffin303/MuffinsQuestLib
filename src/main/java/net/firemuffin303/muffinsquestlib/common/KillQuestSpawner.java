@@ -2,11 +2,12 @@ package net.firemuffin303.muffinsquestlib.common;
 
 import it.unimi.dsi.fastutil.longs.LongSet;
 import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
+import net.firemuffin303.muffinsquestlib.common.quest.PlayerQuestData;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestInstance;
 import net.firemuffin303.muffinsquestlib.common.quest.data.KillEntityQuestData;
-import net.firemuffin303.muffinsquestlib.common.quest.data.QuestData;
-import net.firemuffin303.muffinsquestlib.common.registry.ModQuestTypes;
-import net.firemuffin303.muffinsquestlib.common.registry.ModTags;
+import net.firemuffin303.muffinsquestlib.api.data.QuestData;
+import net.firemuffin303.muffinsquestlib.common.registry.QuestTypes;
+import net.firemuffin303.muffinsquestlib.common.registry.QuestTags;
 import net.minecraft.entity.*;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.particle.ParticleTypes;
@@ -56,7 +57,7 @@ public class KillQuestSpawner implements Spawner {
 
                 List<ServerPlayerEntity> playerEntities = world.getPlayers(serverPlayerEntity -> {
                     PlayerQuestData playerQuestData = ((PlayerQuestData.PlayerQuestDataAccessor)serverPlayerEntity).questLib$getData();
-                    return  playerQuestData.getQuestInstance() != null && playerQuestData.getQuestInstance().getQuest().hasQuestType(ModQuestTypes.KILL_ENTITY_DATA) && !serverPlayerEntity.isSpectator();
+                    return  playerQuestData.getQuestInstance() != null && playerQuestData.getQuestInstance().getQuest().hasQuestType(QuestTypes.KILL_ENTITY_DATA) && !serverPlayerEntity.isSpectator();
                 });
 
                 if(playerEntities.isEmpty()){
@@ -78,8 +79,8 @@ public class KillQuestSpawner implements Spawner {
 
                         QuestInstance questInstance = playerQuestData.getQuestInstance();
 
-                        List<QuestData> questDataList = new ArrayList<>(questInstance.getQuestData(ModQuestTypes.KILL_ENTITY_DATA));
-                        List<Integer> progressList = new ArrayList<>(questInstance.getProgressType(ModQuestTypes.KILL_ENTITY_DATA));
+                        List<QuestData> questDataList = new ArrayList<>(questInstance.getQuestData(QuestTypes.KILL_ENTITY_DATA));
+                        List<Integer> progressList = new ArrayList<>(questInstance.getProgressType(QuestTypes.KILL_ENTITY_DATA));
 
                         for(int j = questDataList.size() -1 ; j >= 0; j--){
                             if(questDataList.get(j).getRequirementAmount() == progressList.get(j)){
@@ -139,11 +140,11 @@ public class KillQuestSpawner implements Spawner {
         int questAmount = killEntityQuestData.getRequirementAmount();
 
 
-        if(entityType.isIn(ModTags.QUEST_SPAWN_BLACKLIST)){
+        if(entityType.isIn(QuestTags.QUEST_SPAWN_BLACKLIST)){
             return false;
         }
 
-        if(entityType.isIn(ModTags.QUEST_NO_CONDITION_SPAWN) && world.getDimensionKey() == DimensionTypes.OVERWORLD){
+        if(entityType.isIn(QuestTags.QUEST_NO_CONDITION_SPAWN) && world.getDimensionKey() == DimensionTypes.OVERWORLD){
             if(trySpawn(serverPlayerEntity,questInstance,world,blockPos,entityType)){
                 return true;
             }
@@ -203,9 +204,9 @@ public class KillQuestSpawner implements Spawner {
                         Random random = world.random;
                         float ak = world.random.nextFloat() * 4.0F;
                         float ao = random.nextFloat() * 6.2831855F;
-                        double f = (double)(MathHelper.cos(ao) * ak);
+                        double f = MathHelper.cos(ao) * ak;
                         double y = 0.01 + random.nextDouble() * 0.5;
-                        double z = (double)(MathHelper.sin(ao) * ak);
+                        double z = MathHelper.sin(ao) * ak;
                         world.spawnParticles(ParticleTypes.CLOUD, blockPos.getX() + f * 0.1, blockPos.getY() + 0.3, blockPos.getZ() + z * 0.1,20,f,y,z,2);
 
                         mobEntity.setTarget(serverPlayerEntity);

@@ -2,8 +2,8 @@ package net.firemuffin303.muffinsquestlib.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.firemuffin303.muffinsquestlib.common.registry.ModQuests;
-import net.firemuffin303.muffinsquestlib.common.registry.ModRegistries;
+import net.firemuffin303.muffinsquestlib.common.registry.Quests;
+import net.firemuffin303.muffinsquestlib.common.registry.QuestRegistries;
 import net.minecraft.registry.RegistryBuilder;
 
 public class ModDataGen implements DataGeneratorEntrypoint {
@@ -20,7 +20,7 @@ public class ModDataGen implements DataGeneratorEntrypoint {
 
     @Override
     public void buildRegistry(RegistryBuilder registryBuilder) {
-       registryBuilder.addRegistry(ModRegistries.QUEST_KEY, ModQuests::dynamicRegister);
+       registryBuilder.addRegistry(QuestRegistries.QUEST_KEY, Quests::dynamicRegister);
 
     }
 }

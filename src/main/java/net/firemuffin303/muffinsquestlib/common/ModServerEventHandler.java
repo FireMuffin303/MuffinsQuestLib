@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -11,16 +12,22 @@ import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
 import net.firemuffin303.muffinsquestlib.api.QuestTradeOffers;
 import net.firemuffin303.muffinsquestlib.common.network.UpdateQuestInstancePacket;
+import net.firemuffin303.muffinsquestlib.common.quest.PlayerQuestData;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestInstance;
 import net.firemuffin303.muffinsquestlib.common.quest.condition.QuestConitions;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.village.TradeOffers;
+import net.minecraft.world.World;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,18 +35,18 @@ import java.util.UUID;
 public class ModServerEventHandler {
 
     public static void init(){
+        //Quest Progression Event
+        ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register(ModServerEventHandler::onLivingEntityAfterDeath);
+        PlayerBlockBreakEvents.AFTER.register(ModServerEventHandler::onPlayerBreakBlock);
+
         ServerEntityEvents.ENTITY_LOAD.register(ModServerEventHandler::onEntityLoaded);
         ServerEntityEvents.ENTITY_UNLOAD.register(ModServerEventHandler::onEntityUnload);
-
-
 
         //Sync Player's Quest Data
         ServerPlayerEvents.AFTER_RESPAWN.register(ModServerEventHandler::onPlayerRespawn);
         ServerPlayerEvents.COPY_FROM.register(ModServerEventHandler::onPlayerCopyFrom);
         ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register(ModServerEventHandler::onPlayerChangeDimension);
         ServerPlayConnectionEvents.JOIN.register(ModServerEventHandler::onPlayerJoined);
-
-        ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register(ModServerEventHandler::onLivingEntityAfterDeath);
 
         TradeOfferHelper.registerWanderingTraderOffers(1,ModServerEventHandler::onWanderingTraderTradeModify);
 
@@ -49,6 +56,12 @@ public class ModServerEventHandler {
             }
         });
 
+    }
+
+    private static void onPlayerBreakBlock(World world, PlayerEntity player, BlockPos blockPos, BlockState blockState, BlockEntity blockEntity){
+        if(player instanceof ServerPlayerEntity serverPlayerEntity){
+            QuestConitions.BREAK_BLOCK_CONDITION.trigger(serverPlayerEntity,blockState);
+        }
     }
 
     private static void onEntityLoaded(Entity entity,ServerWorld serverWorld){

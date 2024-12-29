@@ -22,6 +22,7 @@
   "config.quest_lib.show_hud.false": "ปิด",
   "config.quest_lib.show_hud.true": "เปิด",
   "item.muffins_questlib.quest_paper": "กระดาษภารกิจ",
+  "item.quest_paper.tooltip.break_block": "✶ ขุด %d %s",
   "item.quest_paper.tooltip.collect_item": "✶ เก็บ %d %s",
   "item.quest_paper.tooltip.kill_entity": "✶ ฆ่า %d %s",
   "item.quest_paper.tooltip.quest_time": "เวลา : (%d)",

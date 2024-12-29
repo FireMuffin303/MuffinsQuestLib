@@ -22,6 +22,7 @@
   "config.quest_lib.show_hud.false": "Off",
   "config.quest_lib.show_hud.true": "On",
   "item.muffins_questlib.quest_paper": "Quest Paper",
+  "item.quest_paper.tooltip.break_block": "✶ Mine %d %s",
   "item.quest_paper.tooltip.collect_item": "✶ Collect %d %s",
   "item.quest_paper.tooltip.kill_entity": "✶ Kill %d %s",
   "item.quest_paper.tooltip.quest_time": "Time : (%d)",

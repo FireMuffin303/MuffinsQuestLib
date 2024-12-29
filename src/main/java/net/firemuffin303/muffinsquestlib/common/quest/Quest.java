@@ -2,15 +2,10 @@ package net.firemuffin303.muffinsquestlib.common.quest;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
-import net.firemuffin303.muffinsquestlib.common.quest.data.QuestData;
-import net.firemuffin303.muffinsquestlib.common.registry.ModRegistries;
-import net.minecraft.entity.EntityType;
-import net.minecraft.item.Item;
+import net.firemuffin303.muffinsquestlib.api.data.QuestData;
+import net.firemuffin303.muffinsquestlib.common.registry.QuestRegistries;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.world.event.GameEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,16 +13,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class Quest {
+public  class Quest {
     public Map<QuestType<?>, List<QuestData>> questTypes = new HashMap<>();
     public QuestRarity questRarity = QuestRarity.COMMON;
     public Definition definition;
     public String description;
 
     public static final Codec<Quest> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.unboundedMap(ModRegistries.QUEST_TYPE_REGISTRY.getCodec(),
-                    ((Codec<QuestData>)ModRegistries.QUEST_TYPE_REGISTRY.getCodec().dispatch(QuestData::getType,QuestType::getCodec))
-                            .listOf()
+            Codec.unboundedMap(
+                    QuestRegistries.QUEST_TYPE_REGISTRY.getCodec(),
+                    ((Codec<QuestData>) QuestRegistries.QUEST_TYPE_REGISTRY.getCodec().dispatch(QuestData::getType,QuestType::getCodec)).listOf()
             ).fieldOf("quest_type").forGetter(quest -> quest.questTypes) ,
             Codec.STRING.fieldOf("rarity").forGetter(quest -> quest.questRarity.name()),
             Definition.CODEC.fieldOf("definition").forGetter(quest -> quest.definition),
@@ -45,6 +40,7 @@ public class Quest {
         this.definition = definition;
         this.description = description;
     }
+
 
     public Quest addQuest(QuestType<?> questType, QuestData quest){
         this.getQuests(questType).add(quest);
@@ -68,8 +64,8 @@ public class Quest {
         return this.getQuestType(questType) != null;
     }
 
-    public List<QuestData> getQuestType(QuestType<?> questType){
-        return this.questTypes.get(questType);
+    public <T extends QuestData> List<T> getQuestType(QuestType<T> questType){
+        return (List<T>) this.questTypes.get(questType);
     }
 
     public void setQuestTypes(Map<QuestType<?>, List<QuestData>> questTypes) {
@@ -80,7 +76,7 @@ public class Quest {
     //Network
     public void toPacket(PacketByteBuf packetByteBuf) {
         packetByteBuf.writeMap(this.questTypes,
-                (keyBuf, questType) -> keyBuf.writeRegistryValue(ModRegistries.QUEST_TYPE_REGISTRY,questType),
+                (keyBuf, questType) -> keyBuf.writeRegistryValue(QuestRegistries.QUEST_TYPE_REGISTRY,questType),
                 (valueBuf, questData) -> valueBuf.writeCollection(questData,(packetByteBuf1, questData1) -> questData1.toPacket(packetByteBuf1)));
         this.definition.toPacket(packetByteBuf);
         packetByteBuf.writeString(this.description);
@@ -91,7 +87,7 @@ public class Quest {
         AtomicReference<QuestType<?>> questTypeAtomic = new AtomicReference<>();
         Map<QuestType<?>, List<QuestData>> map = packetByteBuf.readMap(
                 keyBuf -> {
-                    questTypeAtomic.set(keyBuf.readRegistryValue(ModRegistries.QUEST_TYPE_REGISTRY));
+                    questTypeAtomic.set(keyBuf.readRegistryValue(QuestRegistries.QUEST_TYPE_REGISTRY));
                     return questTypeAtomic.get();
                 },
                 valueBuf -> valueBuf.readCollection(ArrayList::new,(buf) ->{

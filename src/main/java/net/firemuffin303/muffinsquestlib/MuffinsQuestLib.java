@@ -7,7 +7,7 @@ import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.firemuffin303.muffinsquestlib.common.ModServerEventHandler;
-import net.firemuffin303.muffinsquestlib.common.PlayerQuestData;
+import net.firemuffin303.muffinsquestlib.common.quest.PlayerQuestData;
 import net.firemuffin303.muffinsquestlib.common.QuestManager;
 import net.firemuffin303.muffinsquestlib.common.command.ModCommands;
 import net.firemuffin303.muffinsquestlib.common.item.QuestPaperItem;
@@ -36,9 +36,9 @@ public class MuffinsQuestLib implements ModInitializer {
     public static final Logger LOGGER = LogUtils.getLogger();
     public static final ItemGroup MOD_ITEM_GROUP = FabricItemGroup.builder()
             .displayName(Text.literal("Quest Library"))
-            .icon(() -> new ItemStack(ModItems.QUEST_PAPER_ITEM))
+            .icon(() -> new ItemStack(QuestItems.QUEST_PAPER_ITEM))
             .entries((displayContext, entries) -> {
-                displayContext.lookup().getOptionalWrapper(ModRegistries.QUEST_KEY).ifPresent(questImpl -> {
+                displayContext.lookup().getOptionalWrapper(QuestRegistries.QUEST_KEY).ifPresent(questImpl -> {
                     questImpl.streamEntries().map(questReference -> QuestPaperItem.getQuestPaper(questReference.registryKey().getValue(),18000)).forEach(entries::add);
                 });
             }).build();
@@ -46,12 +46,12 @@ public class MuffinsQuestLib implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        ModRegistries.init();
+        QuestRegistries.init();
         ModCommands.init();
-        ModSoundEvents.init();
-        ModQuestTypes.init();
-        ModQuests.init();
-        ModItems.init();
+        QuestSoundEvents.init();
+        QuestTypes.init();
+        Quests.init();
+        QuestItems.init();
 
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(QUEST_MANAGER);
 

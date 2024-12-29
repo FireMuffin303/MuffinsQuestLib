@@ -4,11 +4,11 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
 import net.firemuffin303.muffinsquestlib.client.MuffinsQuestLibClient;
-import net.firemuffin303.muffinsquestlib.common.PlayerQuestData;
+import net.firemuffin303.muffinsquestlib.common.quest.PlayerQuestData;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestInstance;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestType;
-import net.firemuffin303.muffinsquestlib.common.quest.data.QuestData;
-import net.firemuffin303.muffinsquestlib.common.registry.ModItems;
+import net.firemuffin303.muffinsquestlib.api.data.QuestData;
+import net.firemuffin303.muffinsquestlib.common.registry.QuestItems;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -134,7 +134,7 @@ public class QuestInfoScreen extends Screen {
 
 
 
-                context.drawItemWithoutEntity(new ItemStack(ModItems.QUEST_PAPER_ITEM,1),x+10,y+26);
+                context.drawItemWithoutEntity(new ItemStack(QuestItems.QUEST_PAPER_ITEM,1),x+10,y+26);
                 String time = String.format("%02d:%02d",((questInstance.time/20)/60),((questInstance.time/20)%60));
                 context.drawText(this.textRenderer,Text.translatable("item.quest_paper.tooltip.quest_time", time),x+32,y+30,11184810,false);
 

@@ -2,8 +2,8 @@ package net.firemuffin303.muffinsquestlib.api;
 
 import net.firemuffin303.muffinsquestlib.common.item.QuestPaperItem;
 import net.firemuffin303.muffinsquestlib.common.quest.Quest;
-import net.firemuffin303.muffinsquestlib.common.registry.ModRegistries;
-import net.firemuffin303.muffinsquestlib.common.registry.ModTags;
+import net.firemuffin303.muffinsquestlib.common.registry.QuestRegistries;
+import net.firemuffin303.muffinsquestlib.common.registry.QuestTags;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -40,7 +40,7 @@ public class QuestTradeOffers {
 
         @Override
         public @Nullable TradeOffer create(Entity entity, Random random) {
-            List<RegistryEntry.Reference<Quest>> quests = entity.getWorld().getRegistryManager().get(ModRegistries.QUEST_KEY).streamEntries().toList();
+            List<RegistryEntry.Reference<Quest>> quests = entity.getWorld().getRegistryManager().get(QuestRegistries.QUEST_KEY).streamEntries().toList();
             RegistryEntry.Reference<Quest> questReference = quests.get(random.nextInt(quests.size()-1));
             return new TradeOffer(new ItemStack(this.buy,this.price), QuestPaperItem.getQuestPaper(questReference.registryKey().getValue(),this.questDuration),this.maxUses,this.experience,this.priceMultiplier);
         }
@@ -54,7 +54,7 @@ public class QuestTradeOffers {
 
         @Override
         public @Nullable TradeOffer create(Entity entity, Random random) {
-            List<RegistryEntry.Reference<Quest>> quests = entity.getWorld().getRegistryManager().get(ModRegistries.QUEST_KEY).streamEntries().filter(questReference -> questReference.isIn(ModTags.WANDERING_TRADER_QUESTS)).toList();
+            List<RegistryEntry.Reference<Quest>> quests = entity.getWorld().getRegistryManager().get(QuestRegistries.QUEST_KEY).streamEntries().filter(questReference -> questReference.isIn(QuestTags.WANDERING_TRADER_QUESTS)).toList();
             RegistryEntry.Reference<Quest> questReference = quests.get(random.nextInt(quests.size()-1));
             return new TradeOffer(new ItemStack(this.buy,this.price), QuestPaperItem.getQuestPaper(questReference.registryKey().getValue(),this.questDuration),this.maxUses,this.experience,this.priceMultiplier);
         }

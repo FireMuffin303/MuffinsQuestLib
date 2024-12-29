@@ -9,7 +9,7 @@ import net.firemuffin303.muffinsquestlib.common.quest.QuestType;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 
-public class ModRegistries {
+public class QuestRegistries {
     public static final RegistryKey<Registry<QuestType<?>>> QUEST_TYPE_KEY = RegistryKey.ofRegistry(MuffinsQuestLib.modId("quest_type"));
     public static final Registry<QuestType<?>> QUEST_TYPE_REGISTRY = FabricRegistryBuilder.createSimple(QUEST_TYPE_KEY).attribute(RegistryAttribute.SYNCED).buildAndRegister();
 

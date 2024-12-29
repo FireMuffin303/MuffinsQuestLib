@@ -1,27 +1,23 @@
 package net.firemuffin303.muffinsquestlib.common.quest.data;
 
-import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.firemuffin303.muffinsquestlib.common.PlayerQuestData;
+import net.firemuffin303.muffinsquestlib.api.data.QuestData;
+import net.firemuffin303.muffinsquestlib.common.quest.PlayerQuestData;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestInstance;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestType;
-import net.firemuffin303.muffinsquestlib.common.registry.ModQuestTypes;
+import net.firemuffin303.muffinsquestlib.common.registry.QuestTypes;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,26 +32,8 @@ public record KillEntityQuestData(EntityRequirementEntry entityRequirementEntry)
         return entityRequirementEntry;
     }
 
-    @Override
-    public String toString() {
-        return this.entityRequirementEntry.entityType.getTranslationKey();
-    }
-
-    @Override
-    public void tooltipRender(TextRenderer textRenderer, int x, int y, DrawContext context) {
-        Text text = Text.translatable("item.quest_paper.tooltip.kill_entity",this.getRequirementAmount(),Text.translatable(getEntityRequirements().entityType.toString()).getString());
-
-        context.drawText(textRenderer, text,x,y, 16755200,false);
-    }
-
-    @Override
-    public <T extends QuestData> Codec<T> getCodec() {
-        return null;
-    }
-
-    @Override
-    public QuestType<?> getType() {
-        return ModQuestTypes.KILL_ENTITY_DATA;
+    public boolean checkKillOther(ServerPlayerEntity serverPlayerEntity, ServerWorld world, LivingEntity target) {
+        return this.entityRequirementEntry.entityType.equals(target.getType());
     }
 
     @Override
@@ -69,31 +47,42 @@ public record KillEntityQuestData(EntityRequirementEntry entityRequirementEntry)
     }
 
     @Override
-    public int getTextWidth(TextRenderer textRenderer) {
-        Text text = Text.translatable("item.quest_paper.tooltip.kill_entity",this.getRequirementAmount(),Text.translatable(getEntityRequirements().entityType.toString()).getString());
-        return textRenderer.getWidth(text);
-    }
-
-    //Quest Data
-    @Override
     public int getRequirementAmount() {
         return this.entityRequirementEntry.amount;
     }
 
+    @Override
+    public void tooltipRender(TextRenderer textRenderer, int x, int y, DrawContext context) {
+        Text text = Text.translatable("item.quest_paper.tooltip.kill_entity",this.getRequirementAmount(),Text.translatable(getEntityRequirements().entityType.toString()).getString());
+
+        context.drawText(textRenderer, text,x,y, 16755200,false);
+    }
+
+    @Override
+    public int getTextWidth(TextRenderer textRenderer) {
+        Text text = Text.translatable("item.quest_paper.tooltip.kill_entity",this.getRequirementAmount(),Text.translatable(getEntityRequirements().entityType.toString()).getString());
+        return textRenderer.getWidth(text);
+    }
     @Override
     public void toPacket(PacketByteBuf packetByteBuf) {
         packetByteBuf.writeIdentifier(Registries.ENTITY_TYPE.getId(this.getEntityRequirements().entityType));
         packetByteBuf.writeInt(this.entityRequirementEntry.amount);
     }
 
-    @Override
-    public boolean checkKillOther(ServerPlayerEntity serverPlayerEntity, ServerWorld world, LivingEntity target) {
-        return this.entityRequirementEntry.entityType.equals(target.getType());
+    public static KillEntityQuestData fromPacket(PacketByteBuf packetByteBuf) {
+        EntityType<?> entityType = Registries.ENTITY_TYPE.get(packetByteBuf.readIdentifier());
+        int amount = packetByteBuf.readInt();
+        return new KillEntityQuestData(new EntityRequirementEntry(entityType,amount));
     }
 
     @Override
-    public boolean checkItem(ServerPlayerEntity serverPlayerEntity, ItemStack itemStack) {
-        return false;
+    public QuestType<?> getType() {
+        return QuestTypes.KILL_ENTITY_DATA;
+    }
+
+    @Override
+    public String toString() {
+        return this.entityRequirementEntry.entityType.getTranslationKey();
     }
 
     private void clearQuestEntity(PlayerEntity player){
@@ -110,12 +99,6 @@ public record KillEntityQuestData(EntityRequirementEntry entityRequirementEntry)
                 }
             }
         }
-    }
-
-    public static KillEntityQuestData fromPacket(PacketByteBuf packetByteBuf) {
-        EntityType<?> entityType = Registries.ENTITY_TYPE.get(packetByteBuf.readIdentifier());
-        int amount = packetByteBuf.readInt();
-        return new KillEntityQuestData(new EntityRequirementEntry(entityType,amount));
     }
 
     public record EntityRequirementEntry(EntityType<?> entityType, int amount) {

@@ -1,8 +1,7 @@
 package net.firemuffin303.muffinsquestlib.common.quest;
 
 import com.mojang.serialization.Codec;
-import net.firemuffin303.muffinsquestlib.common.quest.data.KillEntityQuestData;
-import net.firemuffin303.muffinsquestlib.common.quest.data.QuestData;
+import net.firemuffin303.muffinsquestlib.api.data.QuestData;
 import net.minecraft.network.PacketByteBuf;
 
 import java.util.function.Function;

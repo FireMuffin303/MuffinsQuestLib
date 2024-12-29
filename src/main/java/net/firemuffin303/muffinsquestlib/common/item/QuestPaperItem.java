@@ -1,11 +1,11 @@
 package net.firemuffin303.muffinsquestlib.common.item;
 
-import net.firemuffin303.muffinsquestlib.common.PlayerQuestData;
+import net.firemuffin303.muffinsquestlib.common.quest.PlayerQuestData;
 import net.firemuffin303.muffinsquestlib.common.quest.Quest;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestInstance;
-import net.firemuffin303.muffinsquestlib.common.registry.ModItems;
-import net.firemuffin303.muffinsquestlib.common.registry.ModRegistries;
-import net.firemuffin303.muffinsquestlib.common.registry.ModSoundEvents;
+import net.firemuffin303.muffinsquestlib.common.registry.QuestItems;
+import net.firemuffin303.muffinsquestlib.common.registry.QuestRegistries;
+import net.firemuffin303.muffinsquestlib.common.registry.QuestSoundEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipData;
 import net.minecraft.entity.player.PlayerEntity;
@@ -34,7 +34,7 @@ public class QuestPaperItem extends Item {
         if(!world.isClient && itemStack.getNbt() != null && itemStack.getNbt().getCompound(STORED_QUEST_KEY) != null && !((PlayerQuestData.PlayerQuestDataAccessor)user).questLib$getData().hasQuest()){
             NbtCompound nbtCompound = itemStack.getNbt().getCompound(STORED_QUEST_KEY);
 
-            Quest quest = world.getRegistryManager().get(ModRegistries.QUEST_KEY).get(Identifier.tryParse(nbtCompound.getString("quest")));
+            Quest quest = world.getRegistryManager().get(QuestRegistries.QUEST_KEY).get(Identifier.tryParse(nbtCompound.getString("quest")));
 
             int duration = nbtCompound.getInt("duration");
 
@@ -42,7 +42,7 @@ public class QuestPaperItem extends Item {
                     new QuestInstance(quest,duration)
             );
 
-            user.playSound(ModSoundEvents.QUEST_PAPER_USE,SoundCategory.PLAYERS,1.0f,1.0f);
+            user.playSound(QuestSoundEvents.QUEST_PAPER_USE,SoundCategory.PLAYERS,1.0f,1.0f);
 
             if(!user.isCreative()){
                 itemStack.decrement(1);
@@ -60,7 +60,7 @@ public class QuestPaperItem extends Item {
 
             MinecraftClient minecraftClient = MinecraftClient.getInstance();
             Objects.requireNonNull(minecraftClient.world);
-            Quest quest = minecraftClient.world.getRegistryManager().get(ModRegistries.QUEST_KEY).get(Identifier.tryParse(nbtCompound.getString("quest")));
+            Quest quest = minecraftClient.world.getRegistryManager().get(QuestRegistries.QUEST_KEY).get(Identifier.tryParse(nbtCompound.getString("quest")));
 
             int duration = nbtCompound.getInt("duration");
 
@@ -71,7 +71,7 @@ public class QuestPaperItem extends Item {
     }
 
     public static ItemStack getQuestPaper(Identifier identifier,int time){
-        ItemStack itemStack = new ItemStack(ModItems.QUEST_PAPER_ITEM);
+        ItemStack itemStack = new ItemStack(QuestItems.QUEST_PAPER_ITEM);
         NbtCompound nbtCompound = new NbtCompound();
         nbtCompound.putString("quest",identifier.toString());
         nbtCompound.putInt("duration",time);

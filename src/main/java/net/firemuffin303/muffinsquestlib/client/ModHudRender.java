@@ -1,24 +1,18 @@
 package net.firemuffin303.muffinsquestlib.client;
 
-import com.mojang.logging.LogUtils;
 import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
 import net.firemuffin303.muffinsquestlib.client.config.ModConfig;
 import net.firemuffin303.muffinsquestlib.client.screen.QuestInfoScreen;
-import net.firemuffin303.muffinsquestlib.common.PlayerQuestData;
+import net.firemuffin303.muffinsquestlib.common.quest.PlayerQuestData;
 import net.firemuffin303.muffinsquestlib.common.quest.Quest;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestInstance;
-import net.firemuffin303.muffinsquestlib.common.quest.QuestType;
-import net.firemuffin303.muffinsquestlib.common.quest.data.QuestData;
-import net.firemuffin303.muffinsquestlib.common.registry.ModQuestTypes;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 public class ModHudRender {
     private static final Identifier QUEST_HUD = MuffinsQuestLib.modId("textures/gui/quest_hud.png");

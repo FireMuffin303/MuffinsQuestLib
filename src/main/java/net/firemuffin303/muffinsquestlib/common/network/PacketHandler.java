@@ -1,10 +1,9 @@
 package net.firemuffin303.muffinsquestlib.common.network;
 
-import com.mojang.logging.LogUtils;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
-import net.firemuffin303.muffinsquestlib.common.PlayerQuestData;
+import net.firemuffin303.muffinsquestlib.common.quest.PlayerQuestData;
 import net.firemuffin303.muffinsquestlib.common.QuestEntityData;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestInstance;
 import net.minecraft.client.MinecraftClient;

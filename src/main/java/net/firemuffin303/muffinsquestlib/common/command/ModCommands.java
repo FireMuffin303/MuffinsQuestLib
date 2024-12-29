@@ -5,20 +5,15 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import com.mojang.brigadier.suggestion.SuggestionProvider;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
-import net.firemuffin303.muffinsquestlib.common.PlayerQuestData;
+import net.firemuffin303.muffinsquestlib.common.quest.PlayerQuestData;
 import net.firemuffin303.muffinsquestlib.common.item.QuestPaperItem;
 import net.firemuffin303.muffinsquestlib.common.quest.Quest;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestInstance;
-import net.firemuffin303.muffinsquestlib.common.registry.ModRegistries;
+import net.firemuffin303.muffinsquestlib.common.registry.QuestRegistries;
 import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.EntityArgumentType;
-import net.minecraft.command.argument.IdentifierArgumentType;
 import net.minecraft.command.argument.RegistryEntryArgumentType;
-import net.minecraft.entity.Entity;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -58,13 +53,13 @@ public class ModCommands {
                         ))
                 .then(CommandManager.literal("give")
                         .then(CommandManager.argument("targets", EntityArgumentType.players())
-                                .then(CommandManager.argument("quest", RegistryEntryArgumentType.registryEntry(registryAccess,ModRegistries.QUEST_KEY))
+                                .then(CommandManager.argument("quest", RegistryEntryArgumentType.registryEntry(registryAccess, QuestRegistries.QUEST_KEY))
                                         .then(CommandManager.argument("seconds", IntegerArgumentType.integer(1,1000000)).executes(ModCommands::giveQuest))
                         )
                 ))
                 .then(CommandManager.literal("givepaper")
                         .then(CommandManager.argument("targets",EntityArgumentType.players())
-                                .then( CommandManager.argument("quest",RegistryEntryArgumentType.registryEntry(registryAccess,ModRegistries.QUEST_KEY))
+                                .then( CommandManager.argument("quest",RegistryEntryArgumentType.registryEntry(registryAccess, QuestRegistries.QUEST_KEY))
                                         .then(CommandManager.argument("seconds",IntegerArgumentType.integer(1,1000000)).executes(ModCommands::givePaper))
                                 )
                         )
@@ -80,7 +75,7 @@ public class ModCommands {
         int i = 0;
         while (players.hasNext()){
             ServerPlayerEntity serverPlayerEntity = players.next();
-            Optional<RegistryKey<Quest>> registryKey = RegistryEntryArgumentType.getRegistryEntry(commandContext, "quest", ModRegistries.QUEST_KEY).getKey();
+            Optional<RegistryKey<Quest>> registryKey = RegistryEntryArgumentType.getRegistryEntry(commandContext, "quest", QuestRegistries.QUEST_KEY).getKey();
             if (registryKey.isPresent()) {
                 Identifier identifier = registryKey.get().getValue();
 
@@ -116,7 +111,7 @@ public class ModCommands {
 
         QuestInstance playerQuestInstance = ((PlayerQuestData.PlayerQuestDataAccessor)serverPlayerEntity).questLib$getData().getQuestInstance();
         if(playerQuestInstance != null){
-            Identifier identifier = serverWorld.getRegistryManager().get(ModRegistries.QUEST_KEY).getId(playerQuestInstance.getQuest());
+            Identifier identifier = serverWorld.getRegistryManager().get(QuestRegistries.QUEST_KEY).getId(playerQuestInstance.getQuest());
             commandContext.getSource().sendFeedback(() -> Text.translatable("command.questlib.getquest.success", serverPlayerEntity.getDisplayName(),identifier),false);
             return 1;
         }
@@ -163,7 +158,7 @@ public class ModCommands {
             //Identifier identifier = IdentifierArgumentType.getIdentifier(commandContext,"quest");
             //Quest quest = serverWorld.getRegistryManager().get(ModRegistries.QUEST_KEY).get(identifier);
 
-            Quest quest = RegistryEntryArgumentType.getRegistryEntry(commandContext,"quest",ModRegistries.QUEST_KEY).value();
+            Quest quest = RegistryEntryArgumentType.getRegistryEntry(commandContext,"quest", QuestRegistries.QUEST_KEY).value();
 
             int integer = IntegerArgumentType.getInteger(commandContext,"seconds");
             ((PlayerQuestData.PlayerQuestDataAccessor)serverPlayerEntity).questLib$getData().setQuestInstance(new QuestInstance(quest,integer*20));

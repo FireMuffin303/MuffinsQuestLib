@@ -6,7 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 
-public class ModItems {
+public class QuestItems {
     public static final Item QUEST_PAPER_ITEM = register("quest_paper",new QuestPaperItem(new Item.Settings()));
 
     public static void init(){}

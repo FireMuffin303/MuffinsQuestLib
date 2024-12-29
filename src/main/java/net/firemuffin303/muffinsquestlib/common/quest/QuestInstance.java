@@ -1,15 +1,14 @@
 package net.firemuffin303.muffinsquestlib.common.quest;
 
 import com.google.common.collect.Maps;
-import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
 import net.firemuffin303.muffinsquestlib.common.network.UpdateQuestInstancePacket;
-import net.firemuffin303.muffinsquestlib.common.quest.data.QuestData;
-import net.firemuffin303.muffinsquestlib.common.registry.ModRegistries;
+import net.firemuffin303.muffinsquestlib.api.data.QuestData;
+import net.firemuffin303.muffinsquestlib.common.registry.QuestRegistries;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -32,7 +31,7 @@ public class QuestInstance {
     public int time;
 
     public static final Codec<Map<QuestType<?>,List<Integer>>> PROGRESS_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.unboundedMap(ModRegistries.QUEST_TYPE_REGISTRY.getCodec(),Codec.INT.listOf()).fieldOf("progress").forGetter(questTypeListMap -> questTypeListMap)
+            Codec.unboundedMap(QuestRegistries.QUEST_TYPE_REGISTRY.getCodec(),Codec.INT.listOf()).fieldOf("progress").forGetter(questTypeListMap -> questTypeListMap)
     ).apply(instance,questTypeListMap -> {
         //Codec always return ImmutableMap and ImmutableList. So we need to remake Map and List to be mutable.
         Map<QuestType<?>,List<Integer>> progress = Maps.newHashMap();
@@ -144,7 +143,7 @@ public class QuestInstance {
         NbtCompound questInstance = new NbtCompound();
         //Identifier identifier = MuffinsQuestLib.QUEST_MANAGER.getQuestById().entrySet().stream().filter(identifierQuestEntry -> identifierQuestEntry.getValue() == this.quest).toList().get(0).getKey();
 
-        Identifier identifier = world.getRegistryManager().get(ModRegistries.QUEST_KEY).getId(this.quest);
+        Identifier identifier = world.getRegistryManager().get(QuestRegistries.QUEST_KEY).getId(this.quest);
         Objects.requireNonNull(identifier,"Quest ID not found.");
         questInstance.putString("QuestID", identifier.toString());
 
@@ -167,7 +166,7 @@ public class QuestInstance {
     public static QuestInstance readNbt(PlayerEntity player,NbtCompound nbtCompound){
 
         NbtCompound questInstanceNBT = nbtCompound.getCompound("QuestInstance");
-        Quest quest = player.getWorld().getRegistryManager().get(ModRegistries.QUEST_KEY).get(Identifier.tryParse(questInstanceNBT.getString("QuestID")));
+        Quest quest = player.getWorld().getRegistryManager().get(QuestRegistries.QUEST_KEY).get(Identifier.tryParse(questInstanceNBT.getString("QuestID")));
         Objects.requireNonNull(quest);
         int time = questInstanceNBT.getInt("Time");
 
@@ -194,7 +193,7 @@ public class QuestInstance {
     public void toPacket(PacketByteBuf packetByteBuf) {
         this.quest.toPacket(packetByteBuf);
         packetByteBuf.writeMap(this.progress,
-                (keyBuf,questType) ->keyBuf.writeRegistryValue(ModRegistries.QUEST_TYPE_REGISTRY,questType),
+                (keyBuf,questType) ->keyBuf.writeRegistryValue(QuestRegistries.QUEST_TYPE_REGISTRY,questType),
                 (valueBuf,list) -> valueBuf.writeCollection(list,PacketByteBuf::writeInt));
         packetByteBuf.writeEnumConstant(this.state);
         packetByteBuf.writeInt(this.time);
@@ -204,7 +203,7 @@ public class QuestInstance {
     public static QuestInstance fromPacket(PacketByteBuf packetByteBuf) {
         Quest quest = Quest.fromPacket(packetByteBuf);
         Map<QuestType<?>,List<Integer>> map = packetByteBuf.readMap(
-                keyBuf -> keyBuf.readRegistryValue(ModRegistries.QUEST_TYPE_REGISTRY),
+                keyBuf -> keyBuf.readRegistryValue(QuestRegistries.QUEST_TYPE_REGISTRY),
                 valueBuf -> valueBuf.readCollection(ArrayList<Integer>::new,PacketByteBuf::readInt));
         State state = packetByteBuf.readEnumConstant(State.class);
         int time = packetByteBuf.readInt();

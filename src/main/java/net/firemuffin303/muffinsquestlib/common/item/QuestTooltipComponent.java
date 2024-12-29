@@ -1,21 +1,16 @@
 package net.firemuffin303.muffinsquestlib.common.item;
 
-import com.mojang.logging.LogUtils;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestInstance;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestType;
-import net.firemuffin303.muffinsquestlib.common.quest.data.QuestData;
+import net.firemuffin303.muffinsquestlib.api.data.QuestData;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TextColor;
-import net.minecraft.util.Formatting;
-import org.apache.commons.logging.Log;
 import org.joml.Quaternionf;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class QuestTooltipComponent implements TooltipComponent {

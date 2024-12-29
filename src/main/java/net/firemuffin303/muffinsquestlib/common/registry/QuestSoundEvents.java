@@ -4,10 +4,9 @@ import net.firemuffin303.muffinsquestlib.MuffinsQuestLib;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 
-public class ModSoundEvents {
+public class QuestSoundEvents {
     public static final SoundEvent QUEST_PAPER_USE = register("item.quest_paper.use");
 
     public static void init() {}

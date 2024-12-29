@@ -1,9 +1,8 @@
-package net.firemuffin303.muffinsquestlib.common;
+package net.firemuffin303.muffinsquestlib.common.quest;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.firemuffin303.muffinsquestlib.common.network.ClearQuestInstancePacket;
 import net.firemuffin303.muffinsquestlib.common.network.UpdateQuestInstancePacket;
-import net.firemuffin303.muffinsquestlib.common.quest.QuestInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -34,10 +33,7 @@ public class PlayerQuestData {
             } else if (this.questInstance.getState() == QuestInstance.State.SUCCESS && this.player instanceof ServerPlayerEntity serverPlayerEntity) {
                 this.questInstance.getQuest().questTypes.forEach((questType, questData) -> questData.forEach(questData1 -> questData1.onQuestDone(this.player)));
                 this.questInstance.getRewards().forEach(itemStack -> {
-                    if(!serverPlayerEntity.giveItemStack(itemStack.copy())){
-                        serverPlayerEntity.dropStack(itemStack.copy());
-                    }
-
+                    serverPlayerEntity.getInventory().offerOrDrop(itemStack.copy());
                     serverPlayerEntity.addExperience(this.getQuestInstance().getQuest().definition.experience());
                 });
                 serverPlayerEntity.playSound(SoundEvents.ENTITY_ARROW_HIT_PLAYER,1.0f,1.0f);

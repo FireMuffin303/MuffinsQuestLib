@@ -2,7 +2,7 @@ package net.firemuffin303.muffinsquestlib.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
-import net.firemuffin303.muffinsquestlib.common.registry.ModItems;
+import net.firemuffin303.muffinsquestlib.common.registry.QuestItems;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ItemModelGenerator;
 import net.minecraft.data.client.Models;
@@ -19,6 +19,6 @@ public class ModelGen extends FabricModelProvider {
 
     @Override
     public void generateItemModels(ItemModelGenerator itemModelGenerator) {
-        itemModelGenerator.register(ModItems.QUEST_PAPER_ITEM, Models.GENERATED);
+        itemModelGenerator.register(QuestItems.QUEST_PAPER_ITEM, Models.GENERATED);
     }
 }

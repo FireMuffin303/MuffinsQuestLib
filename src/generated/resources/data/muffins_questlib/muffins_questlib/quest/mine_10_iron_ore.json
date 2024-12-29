@@ -1,0 +1,33 @@
+{
+  "definition": {
+    "experience": 10,
+    "reward_item": [
+      {
+        "Count": 10,
+        "id": "minecraft:iron_ingot"
+      }
+    ]
+  },
+  "description": "Mine 10 Iron Ore",
+  "quest_type": {
+    "muffins_questlib:break_block": [
+      {
+        "type": "muffins_questlib:break_block",
+        "block_requirement": {
+          "amount": 10,
+          "block": "minecraft:iron_ore"
+        }
+      }
+    ],
+    "muffins_questlib:collect_item": [
+      {
+        "type": "muffins_questlib:collect_item",
+        "itemstack_requirements": {
+          "Count": 10,
+          "id": "minecraft:raw_iron"
+        }
+      }
+    ]
+  },
+  "rarity": "COMMON"
+}

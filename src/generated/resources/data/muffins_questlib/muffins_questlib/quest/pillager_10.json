@@ -8,7 +8,7 @@
       }
     ]
   },
-  "description": "This only for check spawn testing",
+  "description": "Kill 10 Pillagers",
   "quest_type": {
     "muffins_questlib:kill_entity": [
       {
