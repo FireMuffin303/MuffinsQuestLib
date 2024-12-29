@@ -5,11 +5,15 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.firemuffin303.muffinsquestlib.api.data.QuestData;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestType;
 import net.firemuffin303.muffinsquestlib.common.registry.QuestTypes;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.texture.Sprite;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -61,6 +65,12 @@ public record CollectItemQuestData(ItemStack itemStack) implements QuestData {
     public int getTextWidth(TextRenderer textRenderer) {
         Text text = Text.translatable("item.quest_paper.tooltip.collect_item",this.itemStack.getCount(),Text.translatable(itemStack.getTranslationKey()).getString());
         return textRenderer.getWidth(text);
+    }
+
+    @Override
+    public Sprite getIcon() {
+        BakedModel itemModels = MinecraftClient.getInstance().getItemRenderer().getModels().getModel(Items.BUNDLE);
+        return itemModels.getParticleSprite();
     }
 
     @Override

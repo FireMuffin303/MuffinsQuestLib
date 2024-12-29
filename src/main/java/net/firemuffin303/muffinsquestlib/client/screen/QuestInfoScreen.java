@@ -15,8 +15,11 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.PressableWidget;
+import net.minecraft.client.texture.Sprite;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -152,6 +155,9 @@ public class QuestInfoScreen extends Screen {
                 for(QuestType<?> questType : questTypes){
                     for(int k = 0; k < questInstance.getQuest().getQuests(questType).size() ; k++) {
                         QuestData questData = questInstance.getQuest().getQuests(questType).get(k);
+
+                        context.drawSprite(x+10,progressY+1,1,16,16,questData.getIcon());
+
                         int current = questInstance.getProgressType(questType).get(k);
                         int requireAmount = questData.getRequirementAmount();
 

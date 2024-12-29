@@ -7,9 +7,14 @@ import net.firemuffin303.muffinsquestlib.common.quest.QuestType;
 import net.firemuffin303.muffinsquestlib.common.registry.QuestTypes;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.item.ItemModels;
+import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.texture.Sprite;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -45,6 +50,12 @@ public record BreakBlockQuestData(BlockRequirementEntry blockRequirementEntry) i
     public int getTextWidth(TextRenderer textRenderer) {
         Text text = Text.translatable("item.quest_paper.tooltip.break_block",this.getRequirementAmount(),Text.translatable(this.blockRequirementEntry.block().getTranslationKey()).getString());
         return textRenderer.getWidth(text);
+    }
+
+    @Override
+    public Sprite getIcon() {
+        BakedModel itemModels = MinecraftClient.getInstance().getItemRenderer().getModels().getModel(Items.IRON_PICKAXE);
+        return itemModels.getParticleSprite();
     }
 
     @Override

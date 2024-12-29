@@ -7,12 +7,16 @@ import net.firemuffin303.muffinsquestlib.common.quest.PlayerQuestData;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestInstance;
 import net.firemuffin303.muffinsquestlib.common.quest.QuestType;
 import net.firemuffin303.muffinsquestlib.common.registry.QuestTypes;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.texture.Sprite;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -63,6 +67,13 @@ public record KillEntityQuestData(EntityRequirementEntry entityRequirementEntry)
         Text text = Text.translatable("item.quest_paper.tooltip.kill_entity",this.getRequirementAmount(),Text.translatable(getEntityRequirements().entityType.toString()).getString());
         return textRenderer.getWidth(text);
     }
+
+    @Override
+    public Sprite getIcon() {
+        BakedModel itemModels = MinecraftClient.getInstance().getItemRenderer().getModels().getModel(Items.IRON_SWORD);
+        return itemModels.getParticleSprite();
+    }
+
     @Override
     public void toPacket(PacketByteBuf packetByteBuf) {
         packetByteBuf.writeIdentifier(Registries.ENTITY_TYPE.getId(this.getEntityRequirements().entityType));
